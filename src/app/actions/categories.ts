@@ -18,7 +18,8 @@ export async function createCategory(formData: FormData) {
     .insert([data])
 
   if (error) {
-    return { error: error.message }
+    console.error('Error creating category:', error.message)
+    throw new Error(error.message)
   }
 
   revalidatePath('/admin')
@@ -41,7 +42,8 @@ export async function updateCategory(id: string, formData: FormData) {
     .eq('id', id)
 
   if (error) {
-    return { error: error.message }
+    console.error('Error updating category:', error.message)
+    throw new Error(error.message)
   }
 
   revalidatePath('/admin')
@@ -58,7 +60,8 @@ export async function deleteCategory(id: string) {
     .eq('id', id)
 
   if (error) {
-    return { error: error.message }
+    console.error('Error deleting category:', error.message)
+    throw new Error(error.message)
   }
 
   revalidatePath('/admin')
@@ -77,7 +80,8 @@ export async function moveCategoryUp(id: string) {
     .single()
 
   if (!currentCategory) {
-    return { error: 'Categoría no encontrada' }
+    console.error('Category not found')
+    return
   }
 
   // Obtener la categoría inmediatamente arriba
@@ -91,7 +95,8 @@ export async function moveCategoryUp(id: string) {
     .single()
 
   if (!previousCategory) {
-    return { error: 'Ya está en la primera posición' }
+    console.log('Already at first position')
+    return
   }
 
   // Intercambiar los display_order
@@ -122,7 +127,8 @@ export async function moveCategoryDown(id: string) {
     .single()
 
   if (!currentCategory) {
-    return { error: 'Categoría no encontrada' }
+    console.error('Category not found')
+    return
   }
 
   // Obtener la categoría inmediatamente abajo
@@ -136,7 +142,8 @@ export async function moveCategoryDown(id: string) {
     .single()
 
   if (!nextCategory) {
-    return { error: 'Ya está en la última posición' }
+    console.log('Already at last position')
+    return
   }
 
   // Intercambiar los display_order

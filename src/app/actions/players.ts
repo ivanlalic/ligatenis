@@ -25,7 +25,8 @@ export async function createPlayer(formData: FormData) {
     .insert([data])
 
   if (error) {
-    return { error: error.message }
+    console.error('Error creating player:', error.message)
+    throw new Error(error.message)
   }
 
   revalidatePath('/admin')
@@ -51,7 +52,8 @@ export async function updatePlayer(id: string, formData: FormData) {
     .eq('id', id)
 
   if (error) {
-    return { error: error.message }
+    console.error('Error updating player:', error.message)
+    throw new Error(error.message)
   }
 
   revalidatePath('/admin')
@@ -71,7 +73,8 @@ export async function deactivatePlayer(id: string) {
     .eq('id', id)
 
   if (error) {
-    return { error: error.message }
+    console.error('Error deactivating player:', error.message)
+    return
   }
 
   // TODO: Marcar partidos futuros como WO automáticamente
@@ -92,7 +95,8 @@ export async function reactivatePlayer(id: string) {
     .eq('id', id)
 
   if (error) {
-    return { error: error.message }
+    console.error('Error reactivating player:', error.message)
+    return
   }
 
   revalidatePath('/admin')
