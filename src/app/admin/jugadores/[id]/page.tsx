@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { deactivatePlayer, reactivatePlayer } from '@/app/actions/players'
+import PlayerActionButtons from '@/components/admin/PlayerActionButtons'
 
 export default async function PlayerDetailPage({
   params,
@@ -64,30 +65,13 @@ export default async function PlayerDetailPage({
           </p>
         </div>
         <div className="flex gap-2">
-          {player.status === 'active' ? (
-            <form action={deactivatePlayer.bind(null, params.id)}>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
-                onClick={(e) => {
-                  if (!confirm(`¿Dar de baja a ${player.first_name} ${player.last_name}?\n\nLos partidos futuros se marcarán como WO para los rivales.`)) {
-                    e.preventDefault()
-                  }
-                }}
-              >
-                Dar de Baja
-              </button>
-            </form>
-          ) : (
-            <form action={reactivatePlayer.bind(null, params.id)}>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition"
-              >
-                Reactivar
-              </button>
-            </form>
-          )}
+          <PlayerActionButtons
+            playerId={params.id}
+            playerName={`${player.first_name} ${player.last_name}`}
+            isActive={player.status === 'active'}
+            deactivateAction={deactivatePlayer}
+            reactivateAction={reactivatePlayer}
+          />
           <Link
             href={`/admin/jugadores/${params.id}/editar`}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
