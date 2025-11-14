@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { deleteCategory } from '@/app/actions/categories'
+import DeleteCategoryButton from '@/components/admin/DeleteCategoryButton'
 
 export default async function CategoriaDetailPage({
   params,
@@ -160,19 +161,11 @@ export default async function CategoriaDetailPage({
           Eliminar esta categoría borrará también todos los jugadores, fechas y partidos asociados.
           Esta acción no se puede deshacer.
         </p>
-        <form action={deleteCategory.bind(null, params.id)}>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-            onClick={(e) => {
-              if (!confirm('¿Estás seguro de eliminar esta categoría? Esta acción no se puede deshacer.')) {
-                e.preventDefault()
-              }
-            }}
-          >
-            🗑️ Eliminar Categoría
-          </button>
-        </form>
+        <DeleteCategoryButton
+          categoryId={params.id}
+          categoryName={category.name}
+          deleteAction={deleteCategory}
+        />
       </div>
     </div>
   )
