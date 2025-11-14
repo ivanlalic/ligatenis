@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import ReorderCategoryButtons from '@/components/admin/ReorderCategoryButtons'
+import { moveCategoryUp, moveCategoryDown } from '@/app/actions/categories'
 
 export default async function CategoriasPage() {
   const supabase = await createClient()
@@ -39,7 +41,7 @@ export default async function CategoriasPage() {
 
       {categoriesWithCounts.length > 0 ? (
         <div className="grid gap-4">
-          {categoriesWithCounts.map((cat) => (
+          {categoriesWithCounts.map((cat, index) => (
             <div
               key={cat.id}
               className="bg-white p-6 rounded-lg shadow hover:shadow-md transition"
@@ -50,10 +52,16 @@ export default async function CategoriasPage() {
                   <div className="flex gap-4 mt-2 text-sm text-gray-600">
                     <span>📅 Temporada {cat.season_year}</span>
                     <span>👥 {cat.playerCount} jugadores</span>
-                    <span>📊 Orden: {cat.display_order}</span>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
+                  <ReorderCategoryButtons
+                    categoryId={cat.id}
+                    isFirst={index === 0}
+                    isLast={index === categoriesWithCounts.length - 1}
+                    moveUpAction={moveCategoryUp}
+                    moveDownAction={moveCategoryDown}
+                  />
                   <Link
                     href={`/admin/categorias/${cat.id}`}
                     className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
