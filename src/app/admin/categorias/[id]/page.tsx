@@ -387,7 +387,14 @@ export default async function CategoriaDetailPage({
                     </h3>
                     <p className="text-sm text-gray-600">
                       {round.period_start && round.period_end
-                        ? `${new Date(round.period_start).toLocaleDateString('es-AR')} - ${new Date(round.period_end).toLocaleDateString('es-AR')}`
+                        ? (() => {
+                            // Parsear fechas en zona horaria local para evitar problemas con UTC
+                            const [y1, m1, d1] = round.period_start.split('-').map(Number)
+                            const [y2, m2, d2] = round.period_end.split('-').map(Number)
+                            const start = new Date(y1, m1 - 1, d1)
+                            const end = new Date(y2, m2 - 1, d2)
+                            return `${start.toLocaleDateString('es-AR')} - ${end.toLocaleDateString('es-AR')}`
+                          })()
                         : 'Sin fecha asignada'}
                     </p>
                   </div>
