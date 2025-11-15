@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { deleteCategory } from '@/app/actions/categories'
 import DeleteCategoryButton from '@/components/admin/DeleteCategoryButton'
 import CategoryTabs from '@/components/admin/CategoryTabs'
+import GenerateFixtureButton from '@/components/admin/GenerateFixtureButton'
 
 export default async function CategoriaDetailPage({
   params,
@@ -385,8 +386,9 @@ export default async function CategoriaDetailPage({
                       Fecha {round.round_number}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {new Date(round.period_start).toLocaleDateString('es-AR')} -{' '}
-                      {new Date(round.period_end).toLocaleDateString('es-AR')}
+                      {round.scheduled_date
+                        ? new Date(round.scheduled_date).toLocaleDateString('es-AR')
+                        : 'Sin fecha asignada'}
                     </p>
                   </div>
                   <span
@@ -448,14 +450,18 @@ export default async function CategoriaDetailPage({
                 Fixture no generado
               </h3>
               <p className="text-gray-600 mb-6">
-                Genera el fixture para comenzar la temporada
+                {activePlayers.length < 2
+                  ? `Necesitas al menos 2 jugadores activos para generar el fixture (actualmente tienes ${activePlayers.length})`
+                  : 'Haz clic en "Generar Fixture" arriba para comenzar la temporada'}
               </p>
-              <Link
-                href={`/admin/fixture?categoria=${params.id}`}
-                className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
-              >
-                Generar Fixture
-              </Link>
+              {activePlayers.length < 2 && (
+                <Link
+                  href="/admin/jugadores/nuevo"
+                  className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                >
+                  Agregar Jugador
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -477,6 +483,11 @@ export default async function CategoriaDetailPage({
           <p className="text-gray-600 mt-1">Temporada {category.season_year}</p>
         </div>
         <div className="flex gap-2">
+          <GenerateFixtureButton
+            categoryId={params.id}
+            categoryName={category.name}
+            hasFixture={(roundsCount || 0) > 0}
+          />
           <Link
             href={`/admin/categorias/${params.id}/editar`}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
