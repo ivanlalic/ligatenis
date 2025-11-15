@@ -46,14 +46,43 @@ export async function updateRoundStatus(
 ) {
   const supabase = await createClient()
 
+  const updateData: any = { status }
+
+  // Si se reabre una fecha cerrada, remover la fecha de cierre
+  if (status !== 'completed') {
+    updateData.closed_by_admin_at = null
+  }
+
   const { error } = await supabase
     .from('rounds')
-    .update({ status })
+    .update(updateData)
     .eq('id', roundId)
 
   if (error) {
     console.error('Error updating round status:', error.message)
     throw new Error('Error al actualizar el estado de la jornada')
+  }
+
+  revalidatePath('/admin/categorias')
+}
+
+/**
+ * Reabre una jornada completada para permitir editar resultados
+ */
+export async function reopenRound(roundId: string) {
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('rounds')
+    .update({
+      status: 'pending',
+      closed_by_admin_at: null
+    })
+    .eq('id', roundId)
+
+  if (error) {
+    console.error('Error reopening round:', error.message)
+    throw new Error('Error al reabrir la jornada')
   }
 
   revalidatePath('/admin/categorias')

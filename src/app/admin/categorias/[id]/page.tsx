@@ -434,27 +434,19 @@ export default async function CategoriaDetailPage({
                       </span>
                     </div>
                   </div>
-                  {round.status !== 'completed' && (
-                    <div className="flex justify-end">
-                      <CloseRoundButton
-                        roundId={round.id}
-                        roundNumber={round.round_number}
-                        status={round.status}
-                        pendingMatchesCount={round.matches?.filter((m: any) => !m.winner_id && !m.is_not_reported).length || 0}
-                      />
-                    </div>
-                  )}
+                  <div className="flex justify-end">
+                    <CloseRoundButton
+                      roundId={round.id}
+                      roundNumber={round.round_number}
+                      status={round.status}
+                      pendingMatchesCount={round.matches?.filter((m: any) => !m.winner_id && !m.is_not_reported).length || 0}
+                    />
+                  </div>
                 </div>
                 <div className="p-6">
                   {round.matches && round.matches.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {round.matches.map((match: any) => {
-                        // Helper para formatear nombre en formato clásico de tenis (I. Lalic)
-                        const formatPlayerName = (player: any) => {
-                          if (!player) return ''
-                          return `${player.first_name.charAt(0)}. ${player.last_name}`
-                        }
-
                         return (
                           <div
                             key={match.id}
@@ -470,7 +462,7 @@ export default async function CategoriaDetailPage({
                               {/* Sin resultado - formato compacto */}
                               {!match.winner_id && !match.is_not_reported && (
                                 <div className="text-center text-sm font-medium text-gray-900">
-                                  {formatPlayerName(match.player1)} vs {formatPlayerName(match.player2)}
+                                  {match.player1?.last_name}, {match.player1?.first_name} vs {match.player2?.last_name}, {match.player2?.first_name}
                                 </div>
                               )}
 
@@ -482,7 +474,8 @@ export default async function CategoriaDetailPage({
                                     <div className={`flex-1 text-sm font-medium ${
                                       match.winner_id === match.player1_id ? 'text-green-700 font-bold' : 'text-gray-700'
                                     }`}>
-                                      {formatPlayerName(match.player1)}
+                                      {match.player1?.last_name}, {match.player1?.first_name}
+                                      {match.winner_id === match.player1_id && ' 🏆'}
                                     </div>
                                     <div className="flex gap-3 font-mono text-sm">
                                       <span className="w-6 text-center">{match.set1_player1_games}</span>
@@ -491,16 +484,14 @@ export default async function CategoriaDetailPage({
                                         <span className="w-6 text-center">{match.set3_player1_games}</span>
                                       )}
                                     </div>
-                                    {match.winner_id === match.player1_id && (
-                                      <span className="text-lg">🏆</span>
-                                    )}
                                   </div>
                                   {/* Player 2 */}
                                   <div className="flex items-center gap-2">
                                     <div className={`flex-1 text-sm font-medium ${
                                       match.winner_id === match.player2_id ? 'text-green-700 font-bold' : 'text-gray-700'
                                     }`}>
-                                      {formatPlayerName(match.player2)}
+                                      {match.player2?.last_name}, {match.player2?.first_name}
+                                      {match.winner_id === match.player2_id && ' 🏆'}
                                     </div>
                                     <div className="flex gap-3 font-mono text-sm">
                                       <span className="w-6 text-center">{match.set1_player2_games}</span>
@@ -509,9 +500,6 @@ export default async function CategoriaDetailPage({
                                         <span className="w-6 text-center">{match.set3_player2_games}</span>
                                       )}
                                     </div>
-                                    {match.winner_id === match.player2_id && (
-                                      <span className="text-lg">🏆</span>
-                                    )}
                                   </div>
                                 </div>
                               )}
@@ -520,11 +508,13 @@ export default async function CategoriaDetailPage({
                               {match.is_walkover && (
                                 <div className="text-center space-y-1">
                                   <div className="text-sm font-medium text-gray-900">
-                                    {formatPlayerName(match.player1)} vs {formatPlayerName(match.player2)}
+                                    {match.player1?.last_name}, {match.player1?.first_name} vs {match.player2?.last_name}, {match.player2?.first_name}
                                   </div>
                                   <div>
                                     <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
-                                      WO - Ganador: {match.winner_id === match.player1_id ? formatPlayerName(match.player1) : formatPlayerName(match.player2)}
+                                      WO - Ganador: {match.winner_id === match.player1_id
+                                        ? `${match.player1?.last_name}, ${match.player1?.first_name}`
+                                        : `${match.player2?.last_name}, ${match.player2?.first_name}`}
                                     </span>
                                   </div>
                                 </div>
@@ -534,7 +524,7 @@ export default async function CategoriaDetailPage({
                               {match.is_not_reported && (
                                 <div className="text-center space-y-1">
                                   <div className="text-sm font-medium text-gray-900">
-                                    {formatPlayerName(match.player1)} vs {formatPlayerName(match.player2)}
+                                    {match.player1?.last_name}, {match.player1?.first_name} vs {match.player2?.last_name}, {match.player2?.first_name}
                                   </div>
                                   <div>
                                     <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">

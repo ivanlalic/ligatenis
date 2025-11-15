@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { closeRound } from '@/app/actions/matches'
+import { reopenRound } from '@/app/actions/rounds'
 
 interface CloseRoundButtonProps {
   roundId: string
@@ -18,16 +19,8 @@ export default function CloseRoundButton({
 }: CloseRoundButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
 
-  if (status === 'completed') {
-    return (
-      <span className="text-sm text-green-600 font-medium">
-        ✅ Fecha cerrada
-      </span>
-    )
-  }
-
   const handleClose = async () => {
-    if (!confirm(`¿Cerrar la Fecha ${roundNumber}?\n\nEsto marcará la jornada como completada y se recalcularán las posiciones.\n\nNo podrás modificar los resultados después de cerrar.`)) {
+    if (!confirm(`¿Cerrar la Fecha ${roundNumber}?\n\nEsto marcará la jornada como completada y se recalcularán las posiciones.`)) {
       return
     }
 
@@ -39,6 +32,38 @@ export default function CloseRoundButton({
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleReopen = async () => {
+    if (!confirm(`¿Reabrir la Fecha ${roundNumber}?\n\nEsto permitirá editar los resultados de los partidos nuevamente.`)) {
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      await reopenRound(roundId)
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Error al reabrir la jornada')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  if (status === 'completed') {
+    return (
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-green-600 font-medium">
+          ✅ Fecha cerrada
+        </span>
+        <button
+          onClick={handleReopen}
+          disabled={isLoading}
+          className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition font-medium disabled:opacity-50"
+        >
+          {isLoading ? 'Reabriendo...' : '🔓 Reabrir Fecha'}
+        </button>
+      </div>
+    )
   }
 
   const canClose = pendingMatchesCount === 0
