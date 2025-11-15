@@ -321,43 +321,51 @@ export default async function CategoriaDetailPage({
                     <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
                       Pts
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                      Sets
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de sets (ganados - perdidos)">
+                      Dif. Sets
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
-                      Games
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de games (ganados - perdidos)">
+                      Dif. Games
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {standings.map((s) => (
-                    <tr key={s.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
-                        {s.position}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {s.player?.last_name}, {s.player?.first_name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                        {s.matches_played}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                        {s.matches_won}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
-                        {s.matches_lost}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary-600 text-center">
-                        {s.points}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                        {s.sets_won}/{s.sets_lost}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
-                        {s.games_won}/{s.games_lost}
-                      </td>
-                    </tr>
-                  ))}
+                  {standings.map((s) => {
+                    const setsDiff = s.sets_won - s.sets_lost
+                    const gamesDiff = s.games_won - s.games_lost
+                    return (
+                      <tr key={s.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                          {s.position}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {s.player?.last_name}, {s.player?.first_name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                          {s.matches_played}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                          {s.matches_won}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                          {s.matches_lost}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary-600 text-center">
+                          {s.points}
+                        </td>
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm text-center font-medium ${
+                          setsDiff > 0 ? 'text-green-600' : setsDiff < 0 ? 'text-red-600' : 'text-gray-500'
+                        }`}>
+                          {setsDiff > 0 ? '+' : ''}{setsDiff}
+                        </td>
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm text-center font-medium ${
+                          gamesDiff > 0 ? 'text-green-600' : gamesDiff < 0 ? 'text-red-600' : 'text-gray-500'
+                        }`}>
+                          {gamesDiff > 0 ? '+' : ''}{gamesDiff}
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>
@@ -440,80 +448,117 @@ export default async function CategoriaDetailPage({
                 <div className="p-6">
                   {round.matches && round.matches.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {round.matches.map((match: any) => (
-                        <div
-                          key={match.id}
-                          className={`border rounded-lg p-4 ${
-                            match.winner_id
-                              ? 'border-green-200 bg-green-50'
-                              : match.is_not_reported
-                              ? 'border-yellow-200 bg-yellow-50'
-                              : 'border-gray-200'
-                          }`}
-                        >
-                          <div className="space-y-3">
-                            {/* Jugadores */}
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <div className={`text-sm font-medium ${
-                                  match.winner_id === match.player1_id ? 'text-green-700 font-bold' : 'text-gray-900'
-                                }`}>
-                                  {match.player1?.last_name}, {match.player1?.first_name}
-                                  {match.winner_id === match.player1_id && ' 🏆'}
-                                </div>
-                                <div className="text-xs text-gray-500 my-1">vs</div>
-                                <div className={`text-sm font-medium ${
-                                  match.winner_id === match.player2_id ? 'text-green-700 font-bold' : 'text-gray-900'
-                                }`}>
-                                  {match.player2?.last_name}, {match.player2?.first_name}
-                                  {match.winner_id === match.player2_id && ' 🏆'}
-                                </div>
-                              </div>
+                      {round.matches.map((match: any) => {
+                        // Helper para formatear nombre en formato clásico de tenis (I. Lalic)
+                        const formatPlayerName = (player: any) => {
+                          if (!player) return ''
+                          return `${player.first_name.charAt(0)}. ${player.last_name}`
+                        }
 
-                              {/* Resultado */}
+                        return (
+                          <div
+                            key={match.id}
+                            className={`border rounded-lg p-4 ${
+                              match.winner_id
+                                ? 'border-green-200 bg-green-50'
+                                : match.is_not_reported
+                                ? 'border-yellow-200 bg-yellow-50'
+                                : 'border-gray-200'
+                            }`}
+                          >
+                            <div className="space-y-3">
+                              {/* Sin resultado - formato compacto */}
+                              {!match.winner_id && !match.is_not_reported && (
+                                <div className="text-center text-sm font-medium text-gray-900">
+                                  {formatPlayerName(match.player1)} vs {formatPlayerName(match.player2)}
+                                </div>
+                              )}
+
+                              {/* Con resultado - formato tabla clásica */}
                               {match.winner_id && !match.is_walkover && (
-                                <div className="ml-4 text-right">
-                                  <div className="text-xs font-mono text-gray-700 space-y-1">
-                                    <div>{match.set1_player1_games}-{match.set1_player2_games}</div>
-                                    <div>{match.set2_player1_games}-{match.set2_player2_games}</div>
-                                    {match.set3_player1_games !== null && (
-                                      <div>{match.set3_player1_games}-{match.set3_player2_games}</div>
+                                <div className="space-y-1">
+                                  {/* Player 1 */}
+                                  <div className="flex items-center gap-2">
+                                    <div className={`flex-1 text-sm font-medium ${
+                                      match.winner_id === match.player1_id ? 'text-green-700 font-bold' : 'text-gray-700'
+                                    }`}>
+                                      {formatPlayerName(match.player1)}
+                                    </div>
+                                    <div className="flex gap-3 font-mono text-sm">
+                                      <span className="w-6 text-center">{match.set1_player1_games}</span>
+                                      <span className="w-6 text-center">{match.set2_player1_games}</span>
+                                      {match.set3_player1_games !== null && (
+                                        <span className="w-6 text-center">{match.set3_player1_games}</span>
+                                      )}
+                                    </div>
+                                    {match.winner_id === match.player1_id && (
+                                      <span className="text-lg">🏆</span>
+                                    )}
+                                  </div>
+                                  {/* Player 2 */}
+                                  <div className="flex items-center gap-2">
+                                    <div className={`flex-1 text-sm font-medium ${
+                                      match.winner_id === match.player2_id ? 'text-green-700 font-bold' : 'text-gray-700'
+                                    }`}>
+                                      {formatPlayerName(match.player2)}
+                                    </div>
+                                    <div className="flex gap-3 font-mono text-sm">
+                                      <span className="w-6 text-center">{match.set1_player2_games}</span>
+                                      <span className="w-6 text-center">{match.set2_player2_games}</span>
+                                      {match.set3_player2_games !== null && (
+                                        <span className="w-6 text-center">{match.set3_player2_games}</span>
+                                      )}
+                                    </div>
+                                    {match.winner_id === match.player2_id && (
+                                      <span className="text-lg">🏆</span>
                                     )}
                                   </div>
                                 </div>
                               )}
 
+                              {/* WO */}
                               {match.is_walkover && (
-                                <div className="ml-4">
-                                  <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
-                                    WO
-                                  </span>
+                                <div className="text-center space-y-1">
+                                  <div className="text-sm font-medium text-gray-900">
+                                    {formatPlayerName(match.player1)} vs {formatPlayerName(match.player2)}
+                                  </div>
+                                  <div>
+                                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
+                                      WO - Ganador: {match.winner_id === match.player1_id ? formatPlayerName(match.player1) : formatPlayerName(match.player2)}
+                                    </span>
+                                  </div>
                                 </div>
                               )}
 
+                              {/* No reportado */}
                               {match.is_not_reported && (
-                                <div className="ml-4">
-                                  <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
-                                    No reportado
-                                  </span>
+                                <div className="text-center space-y-1">
+                                  <div className="text-sm font-medium text-gray-900">
+                                    {formatPlayerName(match.player1)} vs {formatPlayerName(match.player2)}
+                                  </div>
+                                  <div>
+                                    <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
+                                      No reportado
+                                    </span>
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* Botón cargar resultado (solo si la fecha no está cerrada) */}
+                              {round.status !== 'completed' && (
+                                <div className="pt-2 border-t border-gray-200">
+                                  <LoadMatchResultButton
+                                    matchId={match.id}
+                                    player1={match.player1}
+                                    player2={match.player2}
+                                    hasResult={match.winner_id !== null || match.is_not_reported}
+                                  />
                                 </div>
                               )}
                             </div>
-
-                            {/* Botón cargar resultado (solo si la fecha no está cerrada) */}
-                            {round.status !== 'completed' && (
-                              <div className="pt-2 border-t border-gray-200">
-                                <LoadMatchResultButton
-                                  matchId={match.id}
-                                  player1={match.player1}
-                                  player2={match.player2}
-                                  hasResult={match.winner_id !== null || match.is_not_reported}
-                                />
-                              </div>
-                            )}
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   ) : (
                     <p className="text-gray-500 text-center">No hay partidos asignados</p>

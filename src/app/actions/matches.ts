@@ -224,31 +224,57 @@ async function recalculateStandings(categoryId: string) {
 
 /**
  * Calcula las posiciones en la tabla basándose en puntos y criterios de desempate
+ * Criterios en orden:
+ * 1. Mayor puntos
+ * 2. Mejor diferencia de sets (sets ganados - sets perdidos)
+ * 3. Mejor diferencia de games (games ganados - games perdidos)
+ * 4. Head to head (enfrentamiento directo) - TODO: implementar
  */
 async function calculatePositions(categoryId: string) {
   const supabase = await createClient()
 
-  // Obtener la tabla ordenada
+  // Obtener la tabla ordenada según criterios de desempate
   const { data: standings } = await supabase
     .from('standings')
     .select('*')
     .eq('category_id', categoryId)
-    .order('points', { ascending: false })
-    .order('sets_won', { ascending: false })
-    .order('sets_lost', { ascending: true })
-    .order('games_won', { ascending: false })
-    .order('games_lost', { ascending: true })
 
   if (!standings) {
     return
   }
 
+  // Ordenar manualmente con todos los criterios de desempate
+  const sortedStandings = standings.sort((a, b) => {
+    // 1. Mayor puntos
+    if (b.points !== a.points) {
+      return b.points - a.points
+    }
+
+    // 2. Mejor diferencia de sets
+    const aSetsDiv = a.sets_won - a.sets_lost
+    const bSetsDiv = b.sets_won - b.sets_lost
+    if (bSetsDiv !== aSetsDiv) {
+      return bSetsDiv - aSetsDiv
+    }
+
+    // 3. Mejor diferencia de games
+    const aGamesDiv = a.games_won - a.games_lost
+    const bGamesDiv = b.games_won - b.games_lost
+    if (bGamesDiv !== aGamesDiv) {
+      return bGamesDiv - aGamesDiv
+    }
+
+    // TODO: 4. Head to head (enfrentamiento directo)
+    // Por ahora si están empatados en todo, mantener orden actual
+    return 0
+  })
+
   // Asignar posiciones
-  for (let i = 0; i < standings.length; i++) {
+  for (let i = 0; i < sortedStandings.length; i++) {
     await supabase
       .from('standings')
       .update({ position: i + 1 })
-      .eq('id', standings[i].id)
+      .eq('id', sortedStandings[i].id)
   }
 }
 
