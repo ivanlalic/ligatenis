@@ -106,6 +106,17 @@ export async function generateFixture(
     const periodEnd = new Date(roundDate)
     periodEnd.setDate(roundDate.getDate() + (roundDurationDays - 1))
 
+    // Ajustar si termina el 30 pero el mes tiene 31 días
+    if (periodEnd.getDate() === 30) {
+      const month = periodEnd.getMonth()
+      const year = periodEnd.getFullYear()
+      // Obtener el último día del mes (día 0 del mes siguiente)
+      const lastDayOfMonth = new Date(year, month + 1, 0).getDate()
+      if (lastDayOfMonth === 31) {
+        periodEnd.setDate(31)
+      }
+    }
+
     // Crear la jornada
     const { data: round, error: roundError } = await supabase
       .from('rounds')
