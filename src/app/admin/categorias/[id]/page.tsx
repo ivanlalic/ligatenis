@@ -6,6 +6,8 @@ import DeleteCategoryButton from '@/components/admin/DeleteCategoryButton'
 import CategoryTabs from '@/components/admin/CategoryTabs'
 import GenerateFixtureButton from '@/components/admin/GenerateFixtureButton'
 import EditRoundDatesButton from '@/components/admin/EditRoundDatesButton'
+import LoadMatchResultButton from '@/components/admin/LoadMatchResultButton'
+import CloseRoundButton from '@/components/admin/CloseRoundButton'
 
 export default async function CategoriaDetailPage({
   params,
@@ -381,47 +383,59 @@ export default async function CategoriaDetailPage({
           {rounds && rounds.length > 0 ? (
             rounds.map((round: any) => (
               <div key={round.id} className="bg-white rounded-lg shadow">
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-gray-900">
-                      Fecha {round.round_number}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      {round.period_start && round.period_end
-                        ? (() => {
-                            // Parsear fechas en zona horaria local para evitar problemas con UTC
-                            const [y1, m1, d1] = round.period_start.split('-').map(Number)
-                            const [y2, m2, d2] = round.period_end.split('-').map(Number)
-                            const start = new Date(y1, m1 - 1, d1)
-                            const end = new Date(y2, m2 - 1, d2)
-                            return `${start.toLocaleDateString('es-AR')} - ${end.toLocaleDateString('es-AR')}`
-                          })()
-                        : 'Sin fecha asignada'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <EditRoundDatesButton
-                      roundId={round.id}
-                      roundNumber={round.round_number}
-                      currentPeriodStart={round.period_start}
-                      currentPeriodEnd={round.period_end}
-                    />
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        round.status === 'completed'
-                          ? 'bg-green-100 text-green-800'
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex-1">
+                      <h3 className="text-lg font-bold text-gray-900">
+                        Fecha {round.round_number}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {round.period_start && round.period_end
+                          ? (() => {
+                              // Parsear fechas en zona horaria local para evitar problemas con UTC
+                              const [y1, m1, d1] = round.period_start.split('-').map(Number)
+                              const [y2, m2, d2] = round.period_end.split('-').map(Number)
+                              const start = new Date(y1, m1 - 1, d1)
+                              const end = new Date(y2, m2 - 1, d2)
+                              return `${start.toLocaleDateString('es-AR')} - ${end.toLocaleDateString('es-AR')}`
+                            })()
+                          : 'Sin fecha asignada'}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <EditRoundDatesButton
+                        roundId={round.id}
+                        roundNumber={round.round_number}
+                        currentPeriodStart={round.period_start}
+                        currentPeriodEnd={round.period_end}
+                      />
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                          round.status === 'completed'
+                            ? 'bg-green-100 text-green-800'
+                            : round.status === 'active'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {round.status === 'completed'
+                          ? 'Completada'
                           : round.status === 'active'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {round.status === 'completed'
-                        ? 'Completada'
-                        : round.status === 'active'
-                        ? 'En curso'
-                        : 'Pendiente'}
-                    </span>
+                          ? 'En curso'
+                          : 'Pendiente'}
+                      </span>
+                    </div>
                   </div>
+                  {round.status !== 'completed' && (
+                    <div className="flex justify-end">
+                      <CloseRoundButton
+                        roundId={round.id}
+                        roundNumber={round.round_number}
+                        status={round.status}
+                        pendingMatchesCount={round.matches?.filter((m: any) => !m.winner_id && !m.is_not_reported).length || 0}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="p-6">
                   {round.matches && round.matches.length > 0 ? (
@@ -429,24 +443,72 @@ export default async function CategoriaDetailPage({
                       {round.matches.map((match: any) => (
                         <div
                           key={match.id}
-                          className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition"
+                          className={`border rounded-lg p-4 ${
+                            match.winner_id
+                              ? 'border-green-200 bg-green-50'
+                              : match.is_not_reported
+                              ? 'border-yellow-200 bg-yellow-50'
+                              : 'border-gray-200'
+                          }`}
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex-1">
-                              <div className="text-sm font-medium text-gray-900">
-                                {match.player1?.last_name}, {match.player1?.first_name}
-                              </div>
-                              <div className="text-sm text-gray-500">vs</div>
-                              <div className="text-sm font-medium text-gray-900">
-                                {match.player2?.last_name}, {match.player2?.first_name}
-                              </div>
-                            </div>
-                            {match.winner_id && (
-                              <div className="ml-4 text-right">
-                                <div className="text-xs text-gray-500">Ganador:</div>
-                                <div className="text-sm font-bold text-green-600">
-                                  {match.winner?.last_name}
+                          <div className="space-y-3">
+                            {/* Jugadores */}
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className={`text-sm font-medium ${
+                                  match.winner_id === match.player1_id ? 'text-green-700 font-bold' : 'text-gray-900'
+                                }`}>
+                                  {match.player1?.last_name}, {match.player1?.first_name}
+                                  {match.winner_id === match.player1_id && ' 🏆'}
                                 </div>
+                                <div className="text-xs text-gray-500 my-1">vs</div>
+                                <div className={`text-sm font-medium ${
+                                  match.winner_id === match.player2_id ? 'text-green-700 font-bold' : 'text-gray-900'
+                                }`}>
+                                  {match.player2?.last_name}, {match.player2?.first_name}
+                                  {match.winner_id === match.player2_id && ' 🏆'}
+                                </div>
+                              </div>
+
+                              {/* Resultado */}
+                              {match.winner_id && !match.is_walkover && (
+                                <div className="ml-4 text-right">
+                                  <div className="text-xs font-mono text-gray-700 space-y-1">
+                                    <div>{match.set1_player1_games}-{match.set1_player2_games}</div>
+                                    <div>{match.set2_player1_games}-{match.set2_player2_games}</div>
+                                    {match.set3_player1_games !== null && (
+                                      <div>{match.set3_player1_games}-{match.set3_player2_games}</div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+
+                              {match.is_walkover && (
+                                <div className="ml-4">
+                                  <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
+                                    WO
+                                  </span>
+                                </div>
+                              )}
+
+                              {match.is_not_reported && (
+                                <div className="ml-4">
+                                  <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">
+                                    No reportado
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Botón cargar resultado (solo si la fecha no está cerrada) */}
+                            {round.status !== 'completed' && (
+                              <div className="pt-2 border-t border-gray-200">
+                                <LoadMatchResultButton
+                                  matchId={match.id}
+                                  player1={match.player1}
+                                  player2={match.player2}
+                                  hasResult={match.winner_id !== null || match.is_not_reported}
+                                />
                               </div>
                             )}
                           </div>
