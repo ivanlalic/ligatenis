@@ -5,6 +5,7 @@ import { deleteCategory } from '@/app/actions/categories'
 import DeleteCategoryButton from '@/components/admin/DeleteCategoryButton'
 import CategoryTabs from '@/components/admin/CategoryTabs'
 import GenerateFixtureButton from '@/components/admin/GenerateFixtureButton'
+import EditRoundDatesButton from '@/components/admin/EditRoundDatesButton'
 
 export default async function CategoriaDetailPage({
   params,
@@ -381,7 +382,7 @@ export default async function CategoriaDetailPage({
             rounds.map((round: any) => (
               <div key={round.id} className="bg-white rounded-lg shadow">
                 <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                  <div>
+                  <div className="flex-1">
                     <h3 className="text-lg font-bold text-gray-900">
                       Fecha {round.round_number}
                     </h3>
@@ -398,21 +399,29 @@ export default async function CategoriaDetailPage({
                         : 'Sin fecha asignada'}
                     </p>
                   </div>
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      round.status === 'completed'
-                        ? 'bg-green-100 text-green-800'
+                  <div className="flex items-center gap-3">
+                    <EditRoundDatesButton
+                      roundId={round.id}
+                      roundNumber={round.round_number}
+                      currentPeriodStart={round.period_start}
+                      currentPeriodEnd={round.period_end}
+                    />
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        round.status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : round.status === 'active'
+                          ? 'bg-blue-100 text-blue-800'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {round.status === 'completed'
+                        ? 'Completada'
                         : round.status === 'active'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-gray-100 text-gray-800'
-                    }`}
-                  >
-                    {round.status === 'completed'
-                      ? 'Completada'
-                      : round.status === 'active'
-                      ? 'En curso'
-                      : 'Pendiente'}
-                  </span>
+                        ? 'En curso'
+                        : 'Pendiente'}
+                    </span>
+                  </div>
                 </div>
                 <div className="p-6">
                   {round.matches && round.matches.length > 0 ? (
