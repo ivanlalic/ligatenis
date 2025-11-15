@@ -386,8 +386,8 @@ export default async function CategoriaDetailPage({
                       Fecha {round.round_number}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      {round.scheduled_date
-                        ? new Date(round.scheduled_date).toLocaleDateString('es-AR')
+                      {round.period_start && round.period_end
+                        ? `${new Date(round.period_start).toLocaleDateString('es-AR')} - ${new Date(round.period_end).toLocaleDateString('es-AR')}`
                         : 'Sin fecha asignada'}
                     </p>
                   </div>

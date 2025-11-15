@@ -102,13 +102,18 @@ export async function generateFixture(
     const roundDate = new Date(start)
     roundDate.setDate(start.getDate() + (roundIndex * daysBetweenRounds))
 
+    // Calcular period_end (7 días después por defecto o hasta el inicio de la siguiente fecha)
+    const periodEnd = new Date(roundDate)
+    periodEnd.setDate(roundDate.getDate() + (daysBetweenRounds - 1))
+
     // Crear la jornada
     const { data: round, error: roundError } = await supabase
       .from('rounds')
       .insert([{
         category_id: categoryId,
         round_number: roundIndex + 1,
-        scheduled_date: roundDate.toISOString().split('T')[0],
+        period_start: roundDate.toISOString().split('T')[0],
+        period_end: periodEnd.toISOString().split('T')[0],
         status: 'pending'
       }])
       .select()
@@ -122,9 +127,9 @@ export async function generateFixture(
     // Crear los partidos de esta jornada
     const matches = rounds[roundIndex].map(([player1_id, player2_id]) => ({
       round_id: round.id,
+      category_id: categoryId,
       player1_id,
-      player2_id,
-      status: 'pending'
+      player2_id
     }))
 
     const { error: matchesError } = await supabase
