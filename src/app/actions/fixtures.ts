@@ -54,12 +54,12 @@ function generateRoundRobin(players: string[]): string[][][] {
  * Genera el fixture completo para una categoría
  * @param categoryId ID de la categoría
  * @param startDate Fecha de inicio del torneo (primera jornada)
- * @param daysBetweenRounds Días entre cada jornada
+ * @param roundDurationDays Duración en días de cada jornada
  */
 export async function generateFixture(
   categoryId: string,
   startDate: string,
-  daysBetweenRounds: number = 7
+  roundDurationDays: number = 15
 ) {
   const supabase = await createClient()
 
@@ -98,13 +98,13 @@ export async function generateFixture(
   const start = new Date(startDate)
 
   for (let roundIndex = 0; roundIndex < rounds.length; roundIndex++) {
-    // Calcular fecha de esta jornada
+    // Calcular fecha de inicio de esta jornada
     const roundDate = new Date(start)
-    roundDate.setDate(start.getDate() + (roundIndex * daysBetweenRounds))
+    roundDate.setDate(start.getDate() + (roundIndex * roundDurationDays))
 
-    // Calcular period_end (7 días después por defecto o hasta el inicio de la siguiente fecha)
+    // Calcular fecha de fin (duración - 1 días después del inicio)
     const periodEnd = new Date(roundDate)
-    periodEnd.setDate(roundDate.getDate() + (daysBetweenRounds - 1))
+    periodEnd.setDate(roundDate.getDate() + (roundDurationDays - 1))
 
     // Crear la jornada
     const { data: round, error: roundError } = await supabase

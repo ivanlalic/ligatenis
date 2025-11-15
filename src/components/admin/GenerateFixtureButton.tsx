@@ -28,9 +28,9 @@ export default function GenerateFixtureButton({
     try {
       const formData = new FormData(e.currentTarget)
       const startDate = formData.get('start_date') as string
-      const daysBetweenRounds = parseInt(formData.get('days_between_rounds') as string)
+      const roundDurationDays = parseInt(formData.get('round_duration_days') as string)
 
-      await generateFixture(categoryId, startDate, daysBetweenRounds)
+      await generateFixture(categoryId, startDate, roundDurationDays)
       setShowModal(false)
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Error al generar fixture')
@@ -101,21 +101,24 @@ export default function GenerateFixtureButton({
               </div>
 
               <div>
-                <label htmlFor="days_between_rounds" className="block text-sm font-medium text-gray-700 mb-2">
-                  Días entre Jornadas *
+                <label htmlFor="round_duration_days" className="block text-sm font-medium text-gray-700 mb-2">
+                  Duración de cada Jornada (días) *
                 </label>
                 <input
                   type="number"
-                  id="days_between_rounds"
-                  name="days_between_rounds"
+                  id="round_duration_days"
+                  name="round_duration_days"
                   required
-                  defaultValue={7}
+                  defaultValue={15}
                   min={1}
                   max={30}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
                 />
                 <p className="mt-1 text-sm text-gray-500">
-                  Intervalo entre cada fecha (recomendado: 7 días)
+                  Cuántos días tienen los jugadores para jugar sus partidos en cada fecha. Las jornadas son consecutivas.
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Ejemplo: Si ponés 15 días → Fecha 1: 1/12 al 15/12, Fecha 2: 16/12 al 30/12
                 </p>
               </div>
 
