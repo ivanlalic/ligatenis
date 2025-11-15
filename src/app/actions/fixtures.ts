@@ -95,7 +95,9 @@ export async function generateFixture(
   const rounds = generateRoundRobin(playerIds)
 
   // 4. Crear las jornadas y partidos en la base de datos
-  const start = new Date(startDate)
+  // Construir fecha en zona horaria local para evitar problemas con UTC
+  const [year, month, day] = startDate.split('-').map(Number)
+  const start = new Date(year, month - 1, day)
 
   for (let roundIndex = 0; roundIndex < rounds.length; roundIndex++) {
     // Calcular fecha de inicio de esta jornada
