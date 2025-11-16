@@ -42,6 +42,7 @@ interface ExportFixtureButtonsProps {
   seasonYear: number
   rounds: Round[]
   singleRound?: Round | null
+  compact?: boolean
 }
 
 export default function ExportFixtureButtons({
@@ -49,6 +50,7 @@ export default function ExportFixtureButtons({
   seasonYear,
   rounds,
   singleRound,
+  compact = false,
 }: ExportFixtureButtonsProps) {
   const [isExporting, setIsExporting] = useState(false)
 
@@ -242,6 +244,29 @@ export default function ExportFixtureButtons({
     } finally {
       setIsExporting(false)
     }
+  }
+
+  if (compact) {
+    return (
+      <div className="flex gap-1">
+        <button
+          onClick={exportToPDF}
+          disabled={isExporting}
+          className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Exportar a PDF"
+        >
+          PDF
+        </button>
+        <button
+          onClick={exportToExcel}
+          disabled={isExporting}
+          className="px-1.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded hover:bg-gray-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+          title="Exportar a Excel"
+        >
+          XLS
+        </button>
+      </div>
+    )
   }
 
   return (

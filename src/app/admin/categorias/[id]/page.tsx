@@ -480,6 +480,7 @@ export default async function CategoriaDetailPage({
                         seasonYear={category.season_year}
                         rounds={rounds}
                         singleRound={round}
+                        compact
                       />
                       <EditRoundDatesButton
                         roundId={round.id}
