@@ -477,12 +477,12 @@ export default async function CategoriaDetailPage({
                                       {match.player1?.last_name}, {match.player1?.first_name}
                                       {match.winner_id === match.player1_id && ' 🏆'}
                                     </div>
-                                    <div className="flex gap-3 font-mono text-sm">
-                                      <span className="w-6 text-center">{match.set1_player1_games}</span>
-                                      <span className="w-6 text-center">{match.set2_player1_games}</span>
-                                      {match.set3_player1_games !== null && (
-                                        <span className="w-6 text-center">{match.set3_player1_games}</span>
-                                      )}
+                                    <div className="flex gap-3 font-mono text-sm min-w-[120px] justify-end">
+                                      <span className="w-8 text-center">{match.set1_player1_games}</span>
+                                      <span className="w-8 text-center">{match.set2_player1_games}</span>
+                                      <span className="w-8 text-center">
+                                        {match.set3_player1_games !== null ? match.set3_player1_games : ''}
+                                      </span>
                                     </div>
                                   </div>
                                   {/* Player 2 */}
@@ -493,12 +493,12 @@ export default async function CategoriaDetailPage({
                                       {match.player2?.last_name}, {match.player2?.first_name}
                                       {match.winner_id === match.player2_id && ' 🏆'}
                                     </div>
-                                    <div className="flex gap-3 font-mono text-sm">
-                                      <span className="w-6 text-center">{match.set1_player2_games}</span>
-                                      <span className="w-6 text-center">{match.set2_player2_games}</span>
-                                      {match.set3_player2_games !== null && (
-                                        <span className="w-6 text-center">{match.set3_player2_games}</span>
-                                      )}
+                                    <div className="flex gap-3 font-mono text-sm min-w-[120px] justify-end">
+                                      <span className="w-8 text-center">{match.set1_player2_games}</span>
+                                      <span className="w-8 text-center">{match.set2_player2_games}</span>
+                                      <span className="w-8 text-center">
+                                        {match.set3_player2_games !== null ? match.set3_player2_games : ''}
+                                      </span>
                                     </div>
                                   </div>
                                 </div>

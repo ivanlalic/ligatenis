@@ -153,7 +153,7 @@ async function recalculateStandings(categoryId: string) {
       stats[winnerId].matches_won_by_wo++
       stats[loserId].matches_lost_by_wo++
       // WO cuenta como partido ganado pero no se suman sets/games
-      stats[winnerId].points += 3
+      stats[winnerId].points += 1
       return
     }
 
@@ -205,8 +205,8 @@ async function recalculateStandings(categoryId: string) {
     stats[player2Id].games_won += player2Games
     stats[player2Id].games_lost += player1Games
 
-    // Puntos: 3 por partido ganado
-    stats[winnerId].points += 3
+    // Puntos: 1 por partido ganado
+    stats[winnerId].points += 1
   })
 
   // Actualizar la tabla de posiciones en la base de datos
