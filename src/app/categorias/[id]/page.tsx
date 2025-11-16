@@ -72,13 +72,23 @@ export default async function CategoriaPublicDetailPage({
       const start = new Date(round.period_start + 'T00:00:00')
       start.setHours(0, 0, 0, 0)
 
-      // Incluir si es la fecha vigente o si ya comenzó
-      return round.round_number === currentRoundNumber || today >= start
+      // Incluir si ya comenzó (pasada o vigente)
+      return today >= start
     })
 
-    // Si no hay fecha en curso pero hay fechas pasadas, tomar la última pasada
-    if (!currentRoundNumber && visibleRounds.length > 0) {
+    // Si hay fecha vigente en curso, usarla como default
+    if (currentRoundNumber) {
+      // Ya está definida
+    }
+    // Si no hay fecha vigente pero hay fechas que ya pasaron, mostrar la última
+    else if (visibleRounds.length > 0) {
       currentRoundNumber = visibleRounds[visibleRounds.length - 1].round_number
+    }
+    // Si no hay fechas visibles (todas son futuras), mostrar la primera fecha igual
+    else if (allRounds.length > 0) {
+      currentRoundNumber = allRounds[0].round_number
+      // Incluir solo la primera fecha en visibleRounds para el dropdown
+      visibleRounds = [allRounds[0]]
     }
   }
 
