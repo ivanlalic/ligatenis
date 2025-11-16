@@ -8,6 +8,7 @@ import GenerateFixtureButton from '@/components/admin/GenerateFixtureButton'
 import EditRoundDatesButton from '@/components/admin/EditRoundDatesButton'
 import LoadMatchResultButton from '@/components/admin/LoadMatchResultButton'
 import CloseRoundButton from '@/components/admin/CloseRoundButton'
+import AddPlayersToCategory from '@/components/admin/AddPlayersToCategory'
 
 export default async function CategoriaDetailPage({
   params,
@@ -35,6 +36,12 @@ export default async function CategoriaDetailPage({
 
   const activePlayers = players?.filter(p => p.status === 'active') || []
   const inactivePlayers = players?.filter(p => p.status === 'inactive') || []
+
+  // Obtener TODOS los jugadores para el componente AddPlayersToCategory
+  const { data: allPlayers } = await supabase
+    .from('players')
+    .select('*')
+    .order('last_name', { ascending: true })
 
   // Contar fechas generadas
   const { count: roundsCount } = await supabase
@@ -159,6 +166,33 @@ export default async function CategoriaDetailPage({
       icon: '👥',
       content: (
         <div className="space-y-6">
+          {/* Componente para agregar jugadores (solo si NO hay fixture generado) */}
+          {!roundsCount && allPlayers && (
+            <AddPlayersToCategory
+              categoryId={params.id}
+              categoryName={category.name}
+              allPlayers={allPlayers}
+              currentPlayerIds={players?.map(p => p.id) || []}
+            />
+          )}
+
+          {/* Mensaje de advertencia si hay fixture generado */}
+          {roundsCount && roundsCount > 0 && (
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <span className="text-yellow-400 text-xl">⚠️</span>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-yellow-700">
+                    <strong>No se pueden agregar jugadores.</strong> Esta categoría tiene fixture generado.
+                    Para agregar jugadores, primero debes eliminar el fixture.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Jugadores activos */}
           {activePlayers.length > 0 && (
             <div className="bg-white rounded-lg shadow">
