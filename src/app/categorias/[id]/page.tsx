@@ -32,19 +32,63 @@ export default async function CategoriaPublicDetailPage({
     .eq('category_id', params.id)
     .order('position', { ascending: true })
 
-  // Obtener todas las fechas
+  // Obtener todas las fechas con información completa
   const { data: allRounds } = await supabase
     .from('rounds')
-    .select('id, round_number')
+    .select('id, round_number, period_start, period_end, closed_by_admin_at')
     .eq('category_id', params.id)
     .order('round_number', { ascending: true })
+
+  // Determinar la fecha vigente (en curso actualmente)
+  let currentRoundNumber: number | null = null
+  let lastClosedRoundNumber: number | null = null
+
+  if (allRounds && allRounds.length > 0) {
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    // Buscar la última fecha cerrada
+    const closedRounds = allRounds.filter(r => r.closed_by_admin_at)
+    if (closedRounds.length > 0) {
+      lastClosedRoundNumber = closedRounds[closedRounds.length - 1].round_number
+    }
+
+    // Buscar la fecha vigente (en curso)
+    for (const round of allRounds) {
+      const start = new Date(round.period_start + 'T00:00:00')
+      const end = new Date(round.period_end + 'T00:00:00')
+      start.setHours(0, 0, 0, 0)
+      end.setHours(0, 0, 0, 0)
+
+      if (today >= start && today <= end) {
+        currentRoundNumber = round.round_number
+        break
+      }
+    }
+
+    // Si no hay fecha en curso, buscar la próxima fecha
+    if (!currentRoundNumber) {
+      for (const round of allRounds) {
+        const start = new Date(round.period_start + 'T00:00:00')
+        start.setHours(0, 0, 0, 0)
+
+        if (today < start) {
+          currentRoundNumber = round.round_number
+          break
+        }
+      }
+    }
+
+    // Si todas ya pasaron, mostrar la última
+    if (!currentRoundNumber) {
+      currentRoundNumber = allRounds[allRounds.length - 1].round_number
+    }
+  }
 
   // Determinar qué fecha mostrar
   const selectedRoundNumber = searchParams.fecha
     ? parseInt(searchParams.fecha)
-    : allRounds && allRounds.length > 0
-    ? allRounds[0].round_number
-    : null
+    : currentRoundNumber
 
   // Obtener la fecha seleccionada con sus partidos
   const { data: selectedRound } = selectedRoundNumber
@@ -243,24 +287,40 @@ export default async function CategoriaPublicDetailPage({
           {/* Sidebar - Standings */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow p-6 sticky top-8">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">📈 Tabla de Posiciones</h2>
+              <div className="mb-4">
+                <h2 className="text-xl font-bold text-gray-900">📈 Tabla de Posiciones</h2>
+                {lastClosedRoundNumber && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Actualizada a Fecha {lastClosedRoundNumber}
+                  </p>
+                )}
+              </div>
 
               {standings && standings.length > 0 ? (
                 <div className="overflow-x-auto -mx-6">
                   <table className="min-w-full">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                           Pos
                         </th>
-                        <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
                           Jugador
                         </th>
-                        <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                          PJ
+                        </th>
+                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
                           Pts
                         </th>
-                        <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de sets">
-                          Sets
+                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                          PG
+                        </th>
+                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                          PP
+                        </th>
+                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de sets">
+                          Dif.Sets
                         </th>
                       </tr>
                     </thead>
@@ -269,19 +329,26 @@ export default async function CategoriaPublicDetailPage({
                         const setsDiff = s.sets_won - s.sets_lost
                         return (
                           <tr key={s.id} className="hover:bg-gray-50">
-                            <td className="px-3 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-bold text-gray-900">
                               {s.position}
                             </td>
-                            <td className="px-3 py-3 text-sm font-medium text-gray-900">
-                              <div className="max-w-[120px] truncate" title={`${s.player?.last_name}, ${s.player?.first_name}`}>
-                                {s.player?.last_name}
-                              </div>
+                            <td className="px-2 py-2 text-xs font-medium text-gray-900">
+                              {s.player?.last_name}, {s.player?.first_name}
                             </td>
-                            <td className="px-3 py-3 whitespace-nowrap text-sm font-bold text-primary-600 text-center">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs text-gray-900 text-center">
+                              {s.matches_played}
+                            </td>
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-bold text-primary-600 text-center">
                               {s.points}
                             </td>
+                            <td className="px-2 py-2 whitespace-nowrap text-xs text-gray-900 text-center">
+                              {s.matches_won}
+                            </td>
+                            <td className="px-2 py-2 whitespace-nowrap text-xs text-gray-900 text-center">
+                              {s.matches_lost}
+                            </td>
                             <td
-                              className={`px-3 py-3 whitespace-nowrap text-sm text-center font-medium ${
+                              className={`px-2 py-2 whitespace-nowrap text-xs text-center font-medium ${
                                 setsDiff > 0
                                   ? 'text-green-600'
                                   : setsDiff < 0
