@@ -37,15 +37,11 @@ export default async function CategoriaPublicDetailPage({
     .order('position', { ascending: true })
 
   // Obtener todas las fechas con información completa
-  console.log('Category ID:', params.id)
-  const { data: allRounds, error: roundsError } = await supabase
+  const { data: allRounds } = await supabase
     .from('rounds')
     .select('id, round_number, period_start, period_end, closed_by_admin_at')
     .eq('category_id', params.id)
     .order('round_number', { ascending: true })
-
-  console.log('Rounds query error:', roundsError)
-  console.log('Raw rounds data:', allRounds)
 
   // Determinar la fecha vigente basado en fechas cerradas
   let currentRoundNumber: number | null = null
@@ -56,21 +52,10 @@ export default async function CategoriaPublicDetailPage({
     // Buscar la última fecha cerrada (mayor round_number con closed_by_admin_at)
     const closedRounds = allRounds.filter(r => r.closed_by_admin_at !== null && r.closed_by_admin_at !== undefined)
 
-    // DEBUG
-    console.log('=== DEBUG ROUNDS ===')
-    console.log('Total rounds:', allRounds.length)
-    console.log('Closed rounds:', closedRounds.map(r => r.round_number))
-    console.log('All rounds status:', allRounds.map(r => ({
-      round: r.round_number,
-      closed: r.closed_by_admin_at ? 'YES' : 'NO'
-    })))
-
     if (closedRounds.length > 0) {
       // Ordenar por round_number y tomar la última
       const sortedClosed = closedRounds.sort((a, b) => b.round_number - a.round_number)
       lastClosedRoundNumber = sortedClosed[0].round_number
-
-      console.log('Last closed round:', lastClosedRoundNumber)
 
       // La fecha vigente es la primera NO cerrada después de la última cerrada
       const firstNotClosed = allRounds.find(r => {
@@ -78,8 +63,6 @@ export default async function CategoriaPublicDetailPage({
         const isAfterLastClosed = r.round_number > lastClosedRoundNumber!
         return !isClosed && isAfterLastClosed
       })
-
-      console.log('First not closed after last:', firstNotClosed?.round_number || 'NONE')
 
       if (firstNotClosed) {
         currentRoundNumber = firstNotClosed.round_number
@@ -92,17 +75,12 @@ export default async function CategoriaPublicDetailPage({
       currentRoundNumber = allRounds[0].round_number
     }
 
-    console.log('Current round number:', currentRoundNumber)
-
     // Filtrar fechas visibles: TODAS las cerradas + la vigente
     visibleRounds = allRounds.filter(round => {
       const isClosed = round.closed_by_admin_at !== null && round.closed_by_admin_at !== undefined
       const isCurrent = round.round_number === currentRoundNumber
       return isClosed || isCurrent
     })
-
-    console.log('Visible rounds:', visibleRounds.map(r => r.round_number))
-    console.log('=== END DEBUG ===')
   }
 
   // Determinar qué fecha mostrar
