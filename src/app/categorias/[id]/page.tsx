@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import RoundSelector from '@/components/public/RoundSelector'
+import WhatsAppButton from '@/components/public/WhatsAppButton'
 
 // Deshabilitar cache estático - siempre datos frescos
 export const dynamic = 'force-dynamic'
@@ -96,9 +97,9 @@ export default async function CategoriaPublicDetailPage({
           *,
           matches (
             *,
-            player1:players!matches_player1_id_fkey(id, first_name, last_name),
-            player2:players!matches_player2_id_fkey(id, first_name, last_name),
-            winner:players!matches_winner_id_fkey(id, first_name, last_name)
+            player1:players!matches_player1_id_fkey(id, first_name, last_name, phone),
+            player2:players!matches_player2_id_fkey(id, first_name, last_name, phone),
+            winner:players!matches_winner_id_fkey(id, first_name, last_name, phone)
           )
         `)
         .eq('category_id', params.id)
@@ -181,8 +182,17 @@ export default async function CategoriaPublicDetailPage({
                             {/* Sin resultado - formato compacto */}
                             {!match.winner_id && !match.is_not_reported && (
                               <div className="text-center text-sm font-medium text-gray-900">
-                                {match.player1?.last_name}, {match.player1?.first_name} vs{' '}
+                                {match.player1?.last_name}, {match.player1?.first_name}
+                                <WhatsAppButton
+                                  phone={match.player1?.phone}
+                                  playerName={`${match.player1?.last_name}, ${match.player1?.first_name}`}
+                                />
+                                {' '}vs{' '}
                                 {match.player2?.last_name}, {match.player2?.first_name}
+                                <WhatsAppButton
+                                  phone={match.player2?.phone}
+                                  playerName={`${match.player2?.last_name}, ${match.player2?.first_name}`}
+                                />
                               </div>
                             )}
 
@@ -200,6 +210,10 @@ export default async function CategoriaPublicDetailPage({
                                   >
                                     {match.player1?.last_name}, {match.player1?.first_name}
                                     {match.winner_id === match.player1_id && ' 🏆'}
+                                    <WhatsAppButton
+                                      phone={match.player1?.phone}
+                                      playerName={`${match.player1?.last_name}, ${match.player1?.first_name}`}
+                                    />
                                   </div>
                                   <div className="flex gap-3 font-mono text-sm min-w-[120px] justify-end">
                                     <span className="w-8 text-center">{match.set1_player1_games}</span>
@@ -222,6 +236,10 @@ export default async function CategoriaPublicDetailPage({
                                   >
                                     {match.player2?.last_name}, {match.player2?.first_name}
                                     {match.winner_id === match.player2_id && ' 🏆'}
+                                    <WhatsAppButton
+                                      phone={match.player2?.phone}
+                                      playerName={`${match.player2?.last_name}, ${match.player2?.first_name}`}
+                                    />
                                   </div>
                                   <div className="flex gap-3 font-mono text-sm min-w-[120px] justify-end">
                                     <span className="w-8 text-center">{match.set1_player2_games}</span>
@@ -240,8 +258,17 @@ export default async function CategoriaPublicDetailPage({
                             {match.is_walkover && (
                               <div className="text-center space-y-1">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {match.player1?.last_name}, {match.player1?.first_name} vs{' '}
+                                  {match.player1?.last_name}, {match.player1?.first_name}
+                                  <WhatsAppButton
+                                    phone={match.player1?.phone}
+                                    playerName={`${match.player1?.last_name}, ${match.player1?.first_name}`}
+                                  />
+                                  {' '}vs{' '}
                                   {match.player2?.last_name}, {match.player2?.first_name}
+                                  <WhatsAppButton
+                                    phone={match.player2?.phone}
+                                    playerName={`${match.player2?.last_name}, ${match.player2?.first_name}`}
+                                  />
                                 </div>
                                 <div className="text-sm text-orange-600 font-bold">
                                   🚫 WO - Gana {match.winner?.last_name}, {match.winner?.first_name}
@@ -258,8 +285,17 @@ export default async function CategoriaPublicDetailPage({
                             {match.is_not_reported && (
                               <div className="text-center space-y-1">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {match.player1?.last_name}, {match.player1?.first_name} vs{' '}
+                                  {match.player1?.last_name}, {match.player1?.first_name}
+                                  <WhatsAppButton
+                                    phone={match.player1?.phone}
+                                    playerName={`${match.player1?.last_name}, ${match.player1?.first_name}`}
+                                  />
+                                  {' '}vs{' '}
                                   {match.player2?.last_name}, {match.player2?.first_name}
+                                  <WhatsAppButton
+                                    phone={match.player2?.phone}
+                                    playerName={`${match.player2?.last_name}, ${match.player2?.first_name}`}
+                                  />
                                 </div>
                                 <div className="text-sm text-red-600 font-bold">
                                   ❌ Partido no reportado
