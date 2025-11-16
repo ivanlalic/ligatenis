@@ -324,7 +324,7 @@ export default function LoadMatchResultButton({
               <div className="flex gap-3 pt-4 border-t">
                 <button
                   type="submit"
-                  disabled={isLoading || !winnerId}
+                  disabled={isLoading || (isWalkover && !winnerId)}
                   className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Guardando...' : 'Guardar Resultado'}
