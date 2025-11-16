@@ -50,17 +50,32 @@ export default async function CategoriaPublicDetailPage({
 
   if (allRounds && allRounds.length > 0) {
     // Buscar la última fecha cerrada (mayor round_number con closed_by_admin_at)
-    const closedRounds = allRounds.filter(r => r.closed_by_admin_at !== null)
+    const closedRounds = allRounds.filter(r => r.closed_by_admin_at !== null && r.closed_by_admin_at !== undefined)
+
+    // DEBUG
+    console.log('=== DEBUG ROUNDS ===')
+    console.log('Total rounds:', allRounds.length)
+    console.log('Closed rounds:', closedRounds.map(r => r.round_number))
+    console.log('All rounds status:', allRounds.map(r => ({
+      round: r.round_number,
+      closed: r.closed_by_admin_at ? 'YES' : 'NO'
+    })))
 
     if (closedRounds.length > 0) {
       // Ordenar por round_number y tomar la última
       const sortedClosed = closedRounds.sort((a, b) => b.round_number - a.round_number)
       lastClosedRoundNumber = sortedClosed[0].round_number
 
+      console.log('Last closed round:', lastClosedRoundNumber)
+
       // La fecha vigente es la primera NO cerrada después de la última cerrada
-      const firstNotClosed = allRounds.find(r =>
-        !r.closed_by_admin_at && r.round_number > lastClosedRoundNumber!
-      )
+      const firstNotClosed = allRounds.find(r => {
+        const isClosed = r.closed_by_admin_at !== null && r.closed_by_admin_at !== undefined
+        const isAfterLastClosed = r.round_number > lastClosedRoundNumber!
+        return !isClosed && isAfterLastClosed
+      })
+
+      console.log('First not closed after last:', firstNotClosed?.round_number || 'NONE')
 
       if (firstNotClosed) {
         currentRoundNumber = firstNotClosed.round_number
@@ -73,13 +88,17 @@ export default async function CategoriaPublicDetailPage({
       currentRoundNumber = allRounds[0].round_number
     }
 
+    console.log('Current round number:', currentRoundNumber)
+
     // Filtrar fechas visibles: TODAS las cerradas + la vigente
     visibleRounds = allRounds.filter(round => {
-      // Incluir si:
-      // 1. Está cerrada (tiene closed_by_admin_at)
-      // 2. O es la vigente (round_number === currentRoundNumber)
-      return (round.closed_by_admin_at !== null) || (round.round_number === currentRoundNumber)
+      const isClosed = round.closed_by_admin_at !== null && round.closed_by_admin_at !== undefined
+      const isCurrent = round.round_number === currentRoundNumber
+      return isClosed || isCurrent
     })
+
+    console.log('Visible rounds:', visibleRounds.map(r => r.round_number))
+    console.log('=== END DEBUG ===')
   }
 
   // Determinar qué fecha mostrar
