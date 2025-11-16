@@ -82,31 +82,31 @@ export default async function CategoriaDetailPage({
         <div className="space-y-6">
           {/* Estadísticas */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-primary-900">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Jugadores Activos</p>
-                  <p className="text-3xl font-bold text-gray-900">{activePlayers.length}</p>
+                  <p className="text-3xl font-mono font-bold text-primary-900">{activePlayers.length}</p>
                 </div>
                 <div className="text-4xl">👥</div>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-celeste-400">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Fechas Generadas</p>
-                  <p className="text-3xl font-bold text-gray-900">{roundsCount || 0}</p>
+                  <p className="text-3xl font-mono font-bold text-primary-900">{roundsCount || 0}</p>
                 </div>
                 <div className="text-4xl">📅</div>
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow">
+            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-primary-900">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Partidos Totales</p>
-                  <p className="text-3xl font-bold text-gray-900">{matchesCount || 0}</p>
+                  <p className="text-3xl font-mono font-bold text-primary-900">{matchesCount || 0}</p>
                 </div>
                 <div className="text-4xl">🎾</div>
               </div>
@@ -115,7 +115,7 @@ export default async function CategoriaDetailPage({
 
           {/* Información detallada */}
           <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Detalles</h2>
+            <h2 className="text-xl font-heading font-bold text-primary-900 mb-4">Detalles</h2>
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <dt className="text-sm font-medium text-gray-500">Nombre</dt>
@@ -162,8 +162,8 @@ export default async function CategoriaDetailPage({
           {/* Jugadores activos */}
           {activePlayers.length > 0 && (
             <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-900 to-primary-950">
+                <h3 className="text-lg font-heading font-bold text-white">
                   Activos ({activePlayers.length})
                 </h3>
               </div>
@@ -202,7 +202,7 @@ export default async function CategoriaDetailPage({
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                           <Link
                             href={`/admin/jugadores/${player.id}`}
-                            className="text-primary-600 hover:text-primary-900"
+                            className="text-celeste-500 hover:text-celeste-600 font-medium"
                           >
                             Ver detalle
                           </Link>
@@ -218,8 +218,8 @@ export default async function CategoriaDetailPage({
           {/* Jugadores inactivos */}
           {inactivePlayers.length > 0 && (
             <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-bold text-gray-900">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-100">
+                <h3 className="text-lg font-heading font-bold text-gray-700">
                   Inactivos ({inactivePlayers.length})
                 </h3>
               </div>
@@ -260,7 +260,7 @@ export default async function CategoriaDetailPage({
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                           <Link
                             href={`/admin/jugadores/${player.id}`}
-                            className="text-primary-600 hover:text-primary-900"
+                            className="text-celeste-500 hover:text-celeste-600 font-medium"
                           >
                             Ver detalle
                           </Link>
@@ -276,7 +276,7 @@ export default async function CategoriaDetailPage({
           {(!players || players.length === 0) && (
             <div className="bg-white p-12 rounded-lg shadow text-center">
               <div className="text-6xl mb-4">👥</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                 No hay jugadores en esta categoría
               </h3>
               <p className="text-gray-600 mb-6">
@@ -284,7 +284,7 @@ export default async function CategoriaDetailPage({
               </p>
               <Link
                 href="/admin/jugadores/nuevo"
-                className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
               >
                 Agregar Jugador
               </Link>
@@ -299,32 +299,32 @@ export default async function CategoriaDetailPage({
       content: (
         <div>
           {standings && standings.length > 0 ? (
-            <div className="bg-white rounded-lg shadow overflow-x-auto">
+            <div className="bg-white rounded-lg shadow overflow-x-auto border-t-4 border-primary-900">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+                <thead className="bg-gradient-to-r from-primary-900 to-primary-950 text-white">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                       Pos
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">
                       Jugador
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
                       PJ
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
                       G
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
                       P
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
                       Pts
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de sets (ganados - perdidos)">
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase" title="Diferencia de sets (ganados - perdidos)">
                       Dif. Sets
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de games (ganados - perdidos)">
+                    <th className="px-6 py-3 text-center text-xs font-medium uppercase" title="Diferencia de games (ganados - perdidos)">
                       Dif. Games
                     </th>
                   </tr>
@@ -335,30 +335,30 @@ export default async function CategoriaDetailPage({
                     const gamesDiff = s.games_won - s.games_lost
                     return (
                       <tr key={s.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-primary-900">
                           {s.position}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {s.player?.last_name}, {s.player?.first_name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 text-center">
                           {s.matches_played}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 text-center">
                           {s.matches_won}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 text-center">
                           {s.matches_lost}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary-600 text-center">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-primary-900 text-center">
                           {s.points}
                         </td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm text-center font-medium ${
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-mono text-center font-medium ${
                           setsDiff > 0 ? 'text-green-600' : setsDiff < 0 ? 'text-red-600' : 'text-gray-500'
                         }`}>
                           {setsDiff > 0 ? '+' : ''}{setsDiff}
                         </td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm text-center font-medium ${
+                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-mono text-center font-medium ${
                           gamesDiff > 0 ? 'text-green-600' : gamesDiff < 0 ? 'text-red-600' : 'text-gray-500'
                         }`}>
                           {gamesDiff > 0 ? '+' : ''}{gamesDiff}
@@ -372,7 +372,7 @@ export default async function CategoriaDetailPage({
           ) : (
             <div className="bg-white p-12 rounded-lg shadow text-center">
               <div className="text-6xl mb-4">📈</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                 Tabla de posiciones no disponible
               </h3>
               <p className="text-gray-600 mb-6">
@@ -391,10 +391,10 @@ export default async function CategoriaDetailPage({
           {rounds && rounds.length > 0 ? (
             rounds.map((round: any) => (
               <div key={round.id} className="bg-white rounded-lg shadow">
-                <div className="px-6 py-4 border-b border-gray-200">
+                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-900/5 to-celeste-400/10">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-gray-900">
+                      <h3 className="text-lg font-heading font-bold text-primary-900">
                         Fecha {round.round_number}
                       </h3>
                       <p className="text-sm text-gray-600">
@@ -559,7 +559,7 @@ export default async function CategoriaDetailPage({
           ) : (
             <div className="bg-white p-12 rounded-lg shadow text-center">
               <div className="text-6xl mb-4">📅</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+              <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                 Fixture no generado
               </h3>
               <p className="text-gray-600 mb-6">
@@ -570,7 +570,7 @@ export default async function CategoriaDetailPage({
               {activePlayers.length < 2 && (
                 <Link
                   href="/admin/jugadores/nuevo"
-                  className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+                  className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
                 >
                   Agregar Jugador
                 </Link>
@@ -588,12 +588,12 @@ export default async function CategoriaDetailPage({
         <div>
           <Link
             href="/admin/categorias"
-            className="text-primary-600 hover:text-primary-700 text-sm mb-2 inline-block"
+            className="text-celeste-500 hover:text-celeste-600 text-sm mb-2 inline-block font-medium"
           >
             ← Volver a Categorías
           </Link>
-          <h1 className="text-3xl font-bold text-gray-900">{category.name}</h1>
-          <p className="text-gray-600 mt-1">Temporada {category.season_year}</p>
+          <h1 className="text-3xl font-heading font-bold text-primary-900">{category.name}</h1>
+          <p className="text-celeste-500 mt-1">Temporada {category.season_year}</p>
         </div>
         <div className="flex gap-2">
           <GenerateFixtureButton
@@ -603,7 +603,7 @@ export default async function CategoriaDetailPage({
           />
           <Link
             href={`/admin/categorias/${params.id}/editar`}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+            className="px-4 py-2 bg-celeste-400 text-primary-950 rounded-lg hover:bg-celeste-500 transition shadow-md"
           >
             ✏️ Editar
           </Link>

@@ -110,7 +110,7 @@ export default async function CategoriaPublicDetailPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary-600 text-white py-6 md:py-8">
+      <div className="bg-gradient-to-r from-primary-900 to-primary-950 text-white py-6 md:py-8 shadow-lg">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-4">
             <Link
@@ -121,7 +121,7 @@ export default async function CategoriaPublicDetailPage({
             </Link>
             <Link
               href="/admin"
-              className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-600 rounded-lg hover:bg-gray-100 transition text-xs md:text-sm font-medium shadow-md"
+              className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-celeste-100 transition text-xs md:text-sm font-medium shadow-md"
             >
               Admin
             </Link>
@@ -129,8 +129,8 @@ export default async function CategoriaPublicDetailPage({
           <div className="flex items-center gap-3">
             <div className="text-3xl md:text-4xl">🏆</div>
             <div>
-              <h1 className="text-2xl md:text-4xl font-bold">{category.name}</h1>
-              <p className="text-primary-100 mt-1 text-sm md:text-base">Temporada {category.season_year}</p>
+              <h1 className="text-2xl md:text-4xl font-heading font-bold">{category.name}</h1>
+              <p className="text-celeste-300 mt-1 text-sm md:text-base">Temporada {category.season_year}</p>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default async function CategoriaPublicDetailPage({
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">📅 Fixture</h2>
+                <h2 className="text-2xl font-heading font-bold text-primary-900">📅 Fixture</h2>
                 <RoundSelector
                   rounds={visibleRounds || []}
                   selectedRoundNumber={selectedRoundNumber}
@@ -154,7 +154,7 @@ export default async function CategoriaPublicDetailPage({
                 <div>
                   {/* Round info */}
                   <div className="mb-6 pb-4 border-b border-gray-200">
-                    <h3 className="text-lg font-bold text-gray-900 mb-2">
+                    <h3 className="text-lg font-heading font-bold text-primary-900 mb-2">
                       Fecha {selectedRound.round_number}
                     </h3>
                     <p className="text-sm text-gray-600">
@@ -315,7 +315,7 @@ export default async function CategoriaPublicDetailPage({
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">📅</div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                     Fixture no generado
                   </h3>
                   <p className="text-gray-600">
@@ -328,11 +328,11 @@ export default async function CategoriaPublicDetailPage({
 
           {/* Sidebar - Standings */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-8">
+            <div className="bg-white rounded-lg shadow p-6 sticky top-8 border-t-4 border-primary-900">
               <div className="mb-4">
-                <h2 className="text-xl font-bold text-gray-900">📈 Tabla de Posiciones</h2>
+                <h2 className="text-xl font-heading font-bold text-primary-900">📈 Tabla de Posiciones</h2>
                 {lastClosedRoundNumber && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-celeste-500 mt-1">
                     Actualizada a Fecha {lastClosedRoundNumber}
                   </p>
                 )}
@@ -341,27 +341,27 @@ export default async function CategoriaPublicDetailPage({
               {standings && standings.length > 0 ? (
                 <div className="overflow-x-auto -mx-6">
                   <table className="min-w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-gradient-to-r from-primary-900 to-primary-950 text-white">
                       <tr>
-                        <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-left text-xs font-medium uppercase">
                           Pos
                         </th>
-                        <th className="px-2 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-left text-xs font-medium uppercase">
                           Jugador
                         </th>
-                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-center text-xs font-medium uppercase">
                           PJ
                         </th>
-                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-center text-xs font-medium uppercase">
                           Pts
                         </th>
-                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-center text-xs font-medium uppercase">
                           PG
                         </th>
-                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase">
+                        <th className="px-2 py-2 text-center text-xs font-medium uppercase">
                           PP
                         </th>
-                        <th className="px-2 py-2 text-center text-xs font-medium text-gray-500 uppercase" title="Diferencia de sets">
+                        <th className="px-2 py-2 text-center text-xs font-medium uppercase" title="Diferencia de sets">
                           Dif.Sets
                         </th>
                       </tr>
@@ -371,26 +371,26 @@ export default async function CategoriaPublicDetailPage({
                         const setsDiff = s.sets_won - s.sets_lost
                         return (
                           <tr key={s.id} className="hover:bg-gray-50">
-                            <td className="px-2 py-2 whitespace-nowrap text-xs font-bold text-gray-900">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-mono font-bold text-primary-900">
                               {s.position}
                             </td>
                             <td className="px-2 py-2 text-xs font-medium text-gray-900">
                               {s.player?.last_name}, {s.player?.first_name}
                             </td>
-                            <td className="px-2 py-2 whitespace-nowrap text-xs text-gray-900 text-center">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-mono text-gray-900 text-center">
                               {s.matches_played}
                             </td>
-                            <td className="px-2 py-2 whitespace-nowrap text-xs font-bold text-primary-600 text-center">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-mono font-bold text-primary-900 text-center">
                               {s.points}
                             </td>
-                            <td className="px-2 py-2 whitespace-nowrap text-xs text-gray-900 text-center">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-mono text-gray-900 text-center">
                               {s.matches_won}
                             </td>
-                            <td className="px-2 py-2 whitespace-nowrap text-xs text-gray-900 text-center">
+                            <td className="px-2 py-2 whitespace-nowrap text-xs font-mono text-gray-900 text-center">
                               {s.matches_lost}
                             </td>
                             <td
-                              className={`px-2 py-2 whitespace-nowrap text-xs text-center font-medium ${
+                              className={`px-2 py-2 whitespace-nowrap text-xs font-mono text-center font-medium ${
                                 setsDiff > 0
                                   ? 'text-green-600'
                                   : setsDiff < 0

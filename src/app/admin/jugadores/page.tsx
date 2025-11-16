@@ -44,12 +44,12 @@ export default async function JugadoresPage({
     <div>
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Jugadores</h1>
+          <h1 className="text-3xl font-heading font-bold text-primary-900">Jugadores</h1>
           <p className="text-gray-600 mt-1">Gestiona los jugadores de la liga</p>
         </div>
         <Link
           href="/admin/jugadores/nuevo"
-          className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+          className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
         >
           + Nuevo Jugador
         </Link>
@@ -64,23 +64,23 @@ export default async function JugadoresPage({
 
       {/* Lista de jugadores */}
       {players && players.length > 0 ? (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow overflow-hidden border-t-4 border-primary-900">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-gradient-to-r from-primary-900 to-primary-950 text-white">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Jugador
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Email
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Categoría
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Estado
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider">
                   Acciones
                 </th>
               </tr>
@@ -93,14 +93,14 @@ export default async function JugadoresPage({
                       {player.last_name}, {player.first_name}
                     </div>
                     {player.phone && (
-                      <div className="text-sm text-gray-500">{player.phone}</div>
+                      <div className="text-sm text-gray-500 font-mono">{player.phone}</div>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{player.email}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-primary-100 text-primary-800">
+                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-celeste-100 text-celeste-800">
                       {player.current_category?.name}
                     </span>
                   </td>
@@ -119,13 +119,13 @@ export default async function JugadoresPage({
                     <div className="flex justify-end gap-2">
                       <Link
                         href={`/admin/jugadores/${player.id}`}
-                        className="text-primary-600 hover:text-primary-900"
+                        className="text-celeste-500 hover:text-celeste-600 font-medium"
                       >
                         Ver
                       </Link>
                       <Link
                         href={`/admin/jugadores/${player.id}/editar`}
-                        className="text-gray-600 hover:text-gray-900"
+                        className="text-primary-900 hover:text-primary-950 font-medium"
                       >
                         Editar
                       </Link>
@@ -139,7 +139,7 @@ export default async function JugadoresPage({
       ) : (
         <div className="bg-white p-12 rounded-lg shadow text-center">
           <div className="text-6xl mb-4">👥</div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">
+          <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
             No hay jugadores
           </h3>
           <p className="text-gray-600 mb-6">
@@ -149,7 +149,7 @@ export default async function JugadoresPage({
           </p>
           <Link
             href="/admin/jugadores/nuevo"
-            className="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+            className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
           >
             Crear Primer Jugador
           </Link>

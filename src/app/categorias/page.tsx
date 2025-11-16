@@ -25,16 +25,16 @@ export default async function CategoriasPublicPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary-600 text-white py-6 md:py-8">
+      <div className="bg-gradient-to-r from-primary-900 to-primary-950 text-white py-6 md:py-8 shadow-lg">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl md:text-4xl font-bold">🎾 Liga de Tenis 2026</h1>
-              <p className="text-primary-100 mt-1 text-sm md:text-base">Categorías del torneo</p>
+              <h1 className="text-2xl md:text-4xl font-heading font-bold">🎾 Liga de Tenis Plaza Jewell</h1>
+              <p className="text-celeste-300 mt-1 text-sm md:text-base">Temporada 2026</p>
             </div>
             <Link
               href="/admin"
-              className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-600 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-md"
+              className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-celeste-100 transition text-sm md:text-base font-medium shadow-md"
             >
               Admin
             </Link>
@@ -50,7 +50,7 @@ export default async function CategoriasPublicPage() {
               <Link
                 key={cat.id}
                 href={`/categorias/${cat.id}`}
-                className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition block group"
+                className="bg-white p-6 rounded-lg border-2 border-gray-200 shadow hover:shadow-xl hover:border-primary-900 transition-all duration-300 block group"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-4xl">🏆</div>
@@ -58,13 +58,13 @@ export default async function CategoriasPublicPage() {
                     Temporada {cat.season_year}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition">
+                <h3 className="text-xl font-heading font-bold text-gray-900 mb-3 group-hover:text-primary-900 transition">
                   {cat.name}
                 </h3>
                 <div className="flex gap-4 text-sm text-gray-600">
                   <span>👥 {cat.playerCount} jugadores</span>
                 </div>
-                <div className="mt-4 text-primary-600 text-sm font-medium group-hover:underline">
+                <div className="mt-4 text-primary-900 text-sm font-medium group-hover:underline">
                   Ver fixture y tabla →
                 </div>
               </Link>
