@@ -45,8 +45,9 @@ export default async function CategoriaPublicDetailPage({
   let visibleRounds: typeof allRounds = []
 
   if (allRounds && allRounds.length > 0) {
+    // Parsear fecha de hoy en zona horaria local
     const today = new Date()
-    today.setHours(0, 0, 0, 0)
+    const todayStr = today.toISOString().split('T')[0] // YYYY-MM-DD
 
     // Buscar la última fecha cerrada
     const closedRounds = allRounds.filter(r => r.closed_by_admin_at)
@@ -56,12 +57,7 @@ export default async function CategoriaPublicDetailPage({
 
     // Buscar la fecha vigente (en curso)
     for (const round of allRounds) {
-      const start = new Date(round.period_start + 'T00:00:00')
-      const end = new Date(round.period_end + 'T00:00:00')
-      start.setHours(0, 0, 0, 0)
-      end.setHours(0, 0, 0, 0)
-
-      if (today >= start && today <= end) {
+      if (todayStr >= round.period_start && todayStr <= round.period_end) {
         currentRoundNumber = round.round_number
         break
       }
@@ -69,11 +65,8 @@ export default async function CategoriaPublicDetailPage({
 
     // Filtrar fechas visibles: solo pasadas y la vigente (no futuras)
     visibleRounds = allRounds.filter(round => {
-      const start = new Date(round.period_start + 'T00:00:00')
-      start.setHours(0, 0, 0, 0)
-
       // Incluir si ya comenzó (pasada o vigente)
-      return today >= start
+      return todayStr >= round.period_start
     })
 
     // Si hay fecha vigente en curso, usarla como default
