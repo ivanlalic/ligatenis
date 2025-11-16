@@ -39,50 +39,38 @@ export default async function CategoriaPublicDetailPage({
     .eq('category_id', params.id)
     .order('round_number', { ascending: true })
 
-  // Determinar la fecha vigente (en curso actualmente)
+  // Determinar la fecha vigente basado en fechas cerradas
   let currentRoundNumber: number | null = null
   let lastClosedRoundNumber: number | null = null
   let visibleRounds: typeof allRounds = []
 
   if (allRounds && allRounds.length > 0) {
-    // Parsear fecha de hoy en zona horaria local
-    const today = new Date()
-    const todayStr = today.toISOString().split('T')[0] // YYYY-MM-DD
+    // Buscar fechas cerradas ordenadas
+    const closedRounds = allRounds
+      .filter(r => r.closed_by_admin_at)
+      .sort((a, b) => a.round_number - b.round_number)
 
-    // Buscar la última fecha cerrada
-    const closedRounds = allRounds.filter(r => r.closed_by_admin_at)
     if (closedRounds.length > 0) {
       lastClosedRoundNumber = closedRounds[closedRounds.length - 1].round_number
-    }
 
-    // Buscar la fecha vigente (en curso)
-    for (const round of allRounds) {
-      if (todayStr >= round.period_start && todayStr <= round.period_end) {
-        currentRoundNumber = round.round_number
-        break
+      // La fecha vigente es la siguiente después de la última cerrada
+      const nextRound = allRounds.find(r => r.round_number > lastClosedRoundNumber!)
+      if (nextRound) {
+        currentRoundNumber = nextRound.round_number
+      } else {
+        // Si no hay siguiente, la vigente es la última cerrada (torneo terminado)
+        currentRoundNumber = lastClosedRoundNumber
       }
-    }
-
-    // Filtrar fechas visibles: solo pasadas y la vigente (no futuras)
-    visibleRounds = allRounds.filter(round => {
-      // Incluir si ya comenzó (pasada o vigente)
-      return todayStr >= round.period_start
-    })
-
-    // Si hay fecha vigente en curso, usarla como default
-    if (currentRoundNumber) {
-      // Ya está definida
-    }
-    // Si no hay fecha vigente pero hay fechas que ya pasaron, mostrar la última
-    else if (visibleRounds.length > 0) {
-      currentRoundNumber = visibleRounds[visibleRounds.length - 1].round_number
-    }
-    // Si no hay fechas visibles (todas son futuras), mostrar la primera fecha igual
-    else if (allRounds.length > 0) {
+    } else {
+      // Si no hay fechas cerradas, la vigente es la primera
       currentRoundNumber = allRounds[0].round_number
-      // Incluir solo la primera fecha en visibleRounds para el dropdown
-      visibleRounds = [allRounds[0]]
     }
+
+    // Filtrar fechas visibles: cerradas + vigente (no las futuras después de vigente)
+    visibleRounds = allRounds.filter(round => {
+      // Incluir si está cerrada o es la vigente
+      return round.closed_by_admin_at || round.round_number === currentRoundNumber
+    })
   }
 
   // Determinar qué fecha mostrar
