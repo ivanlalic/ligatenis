@@ -9,6 +9,8 @@ import EditRoundDatesButton from '@/components/admin/EditRoundDatesButton'
 import LoadMatchResultButton from '@/components/admin/LoadMatchResultButton'
 import CloseRoundButton from '@/components/admin/CloseRoundButton'
 import AddPlayersToCategory from '@/components/admin/AddPlayersToCategory'
+import ExportFixtureButtons from '@/components/admin/ExportFixtureButtons'
+import ExportStandingsButtons from '@/components/admin/ExportStandingsButtons'
 
 export default async function CategoriaDetailPage({
   params,
@@ -331,7 +333,24 @@ export default async function CategoriaDetailPage({
       label: 'Tabla de Posiciones',
       icon: '📈',
       content: (
-        <div>
+        <div className="space-y-4">
+          {/* Botones de exportación */}
+          {standings && standings.length > 0 && (
+            <div className="flex justify-end">
+              <ExportStandingsButtons
+                categoryName={category.name}
+                seasonYear={category.season_year}
+                standings={standings}
+                lastClosedRound={
+                  rounds
+                    ?.filter((r: any) => r.closed_by_admin_at)
+                    .sort((a: any, b: any) => b.round_number - a.round_number)[0]
+                    ?.round_number
+                }
+              />
+            </div>
+          )}
+
           {standings && standings.length > 0 ? (
             <div className="bg-white rounded-lg shadow overflow-x-auto border-t-4 border-primary-900">
               <table className="min-w-full divide-y divide-gray-200">
@@ -422,6 +441,17 @@ export default async function CategoriaDetailPage({
       icon: '📅',
       content: (
         <div className="space-y-6">
+          {/* Botones de exportación general */}
+          {rounds && rounds.length > 0 && (
+            <div className="flex justify-end">
+              <ExportFixtureButtons
+                categoryName={category.name}
+                seasonYear={category.season_year}
+                rounds={rounds}
+              />
+            </div>
+          )}
+
           {rounds && rounds.length > 0 ? (
             rounds.map((round: any) => (
               <div key={round.id} className="bg-white rounded-lg shadow">
@@ -445,6 +475,12 @@ export default async function CategoriaDetailPage({
                       </p>
                     </div>
                     <div className="flex items-center gap-3">
+                      <ExportFixtureButtons
+                        categoryName={category.name}
+                        seasonYear={category.season_year}
+                        rounds={rounds}
+                        singleRound={round}
+                      />
                       <EditRoundDatesButton
                         roundId={round.id}
                         roundNumber={round.round_number}
