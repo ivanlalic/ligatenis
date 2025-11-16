@@ -28,14 +28,14 @@ export default function LoadMatchResultButton({
     try {
       const formData = new FormData(e.currentTarget)
 
-      if (!winnerId) {
-        alert('Debes seleccionar un ganador')
-        setIsLoading(false)
-        return
-      }
-
       if (isWalkover) {
-        // Si es WO, solo necesitamos el ganador y la razón
+        // Si es WO, necesitamos el ganador seleccionado manualmente
+        if (!winnerId) {
+          alert('Debes seleccionar un ganador para el WO')
+          setIsLoading(false)
+          return
+        }
+
         await loadMatchResult(matchId, {
           winnerId,
           set1Player1: 0,
@@ -46,7 +46,7 @@ export default function LoadMatchResultButton({
           walkoverReason: formData.get('walkover_reason') as string
         })
       } else {
-        // Resultado normal
+        // Resultado normal - calcular ganador automáticamente
         const set1Player1 = parseInt(formData.get('set1_player1') as string)
         const set1Player2 = parseInt(formData.get('set1_player2') as string)
         const set2Player1 = parseInt(formData.get('set2_player1') as string)
@@ -54,8 +54,26 @@ export default function LoadMatchResultButton({
         const set3Player1 = formData.get('set3_player1') ? parseInt(formData.get('set3_player1') as string) : undefined
         const set3Player2 = formData.get('set3_player2') ? parseInt(formData.get('set3_player2') as string) : undefined
 
+        // Calcular sets ganados por cada jugador
+        let player1Sets = 0
+        let player2Sets = 0
+
+        if (set1Player1 > set1Player2) player1Sets++
+        else player2Sets++
+
+        if (set2Player1 > set2Player2) player1Sets++
+        else player2Sets++
+
+        if (set3Player1 !== undefined && set3Player2 !== undefined) {
+          if (set3Player1 > set3Player2) player1Sets++
+          else player2Sets++
+        }
+
+        // Determinar ganador
+        const calculatedWinnerId = player1Sets > player2Sets ? player1.id : player2.id
+
         await loadMatchResult(matchId, {
-          winnerId,
+          winnerId: calculatedWinnerId,
           set1Player1,
           set1Player2,
           set2Player1,
@@ -146,36 +164,38 @@ export default function LoadMatchResultButton({
                 </label>
               </div>
 
-              {/* Ganador */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Ganador *
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setWinnerId(player1.id)}
-                    className={`px-4 py-3 rounded-lg border-2 transition ${
-                      winnerId === player1.id
-                        ? 'border-green-500 bg-green-50 text-green-900'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                  >
-                    {player1.last_name}, {player1.first_name}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setWinnerId(player2.id)}
-                    className={`px-4 py-3 rounded-lg border-2 transition ${
-                      winnerId === player2.id
-                        ? 'border-green-500 bg-green-50 text-green-900'
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                  >
-                    {player2.last_name}, {player2.first_name}
-                  </button>
+              {/* Ganador - solo para WO */}
+              {isWalkover && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Ganador *
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setWinnerId(player1.id)}
+                      className={`px-4 py-3 rounded-lg border-2 transition ${
+                        winnerId === player1.id
+                          ? 'border-green-500 bg-green-50 text-green-900'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      {player1.last_name}, {player1.first_name}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setWinnerId(player2.id)}
+                      className={`px-4 py-3 rounded-lg border-2 transition ${
+                        winnerId === player2.id
+                          ? 'border-green-500 bg-green-50 text-green-900'
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                    >
+                      {player2.last_name}, {player2.first_name}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {isWalkover ? (
                 /* Razón del WO */
@@ -192,79 +212,112 @@ export default function LoadMatchResultButton({
                   />
                 </div>
               ) : (
-                /* Sets y games */
+                /* Sets y games - formato tabla */
                 <div className="space-y-4">
                   <p className="text-sm font-medium text-gray-700">Resultado por Sets</p>
 
-                  {/* Set 1 */}
-                  <div className="grid grid-cols-5 gap-3 items-center">
-                    <div className="col-span-2 text-sm text-gray-600">Set 1 *</div>
-                    <input
-                      type="number"
-                      name="set1_player1"
-                      required={!isWalkover}
-                      min="0"
-                      max="7"
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-center"
-                      placeholder="0"
-                    />
-                    <div className="text-center text-gray-400">-</div>
-                    <input
-                      type="number"
-                      name="set1_player2"
-                      required={!isWalkover}
-                      min="0"
-                      max="7"
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-center"
-                      placeholder="0"
-                    />
+                  <div className="border rounded-lg overflow-hidden">
+                    <table className="w-full">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
+                            Jugador
+                          </th>
+                          <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase w-20">
+                            Set 1
+                          </th>
+                          <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase w-20">
+                            Set 2
+                          </th>
+                          <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase w-20">
+                            Set 3
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {/* Player 1 */}
+                        <tr className="bg-white">
+                          <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                            {player1.last_name}, {player1.first_name}
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              name="set1_player1"
+                              required
+                              min="0"
+                              max="7"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-center font-mono"
+                              placeholder="0"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              name="set2_player1"
+                              required
+                              min="0"
+                              max="7"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-center font-mono"
+                              placeholder="0"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              name="set3_player1"
+                              min="0"
+                              max="7"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-center font-mono"
+                              placeholder="-"
+                            />
+                          </td>
+                        </tr>
+                        {/* Player 2 */}
+                        <tr className="bg-white">
+                          <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                            {player2.last_name}, {player2.first_name}
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              name="set1_player2"
+                              required
+                              min="0"
+                              max="7"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-center font-mono"
+                              placeholder="0"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              name="set2_player2"
+                              required
+                              min="0"
+                              max="7"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-center font-mono"
+                              placeholder="0"
+                            />
+                          </td>
+                          <td className="px-4 py-3">
+                            <input
+                              type="number"
+                              name="set3_player2"
+                              min="0"
+                              max="7"
+                              className="w-full px-2 py-1 border border-gray-300 rounded text-center font-mono"
+                              placeholder="-"
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
 
-                  {/* Set 2 */}
-                  <div className="grid grid-cols-5 gap-3 items-center">
-                    <div className="col-span-2 text-sm text-gray-600">Set 2 *</div>
-                    <input
-                      type="number"
-                      name="set2_player1"
-                      required={!isWalkover}
-                      min="0"
-                      max="7"
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-center"
-                      placeholder="0"
-                    />
-                    <div className="text-center text-gray-400">-</div>
-                    <input
-                      type="number"
-                      name="set2_player2"
-                      required={!isWalkover}
-                      min="0"
-                      max="7"
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-center"
-                      placeholder="0"
-                    />
-                  </div>
-
-                  {/* Set 3 (opcional) */}
-                  <div className="grid grid-cols-5 gap-3 items-center">
-                    <div className="col-span-2 text-sm text-gray-600">Set 3 (opcional)</div>
-                    <input
-                      type="number"
-                      name="set3_player1"
-                      min="0"
-                      max="7"
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-center"
-                      placeholder="0"
-                    />
-                    <div className="text-center text-gray-400">-</div>
-                    <input
-                      type="number"
-                      name="set3_player2"
-                      min="0"
-                      max="7"
-                      className="px-3 py-2 border border-gray-300 rounded-lg text-center"
-                      placeholder="0"
-                    />
-                  </div>
+                  <p className="text-xs text-gray-500">
+                    * Set 3 es opcional. Solo completarlo si el partido llegó al tercer set.
+                  </p>
                 </div>
               )}
 
