@@ -42,6 +42,7 @@ export default async function CategoriaPublicDetailPage({
   // Determinar la fecha vigente (en curso actualmente)
   let currentRoundNumber: number | null = null
   let lastClosedRoundNumber: number | null = null
+  let visibleRounds: typeof allRounds = []
 
   if (allRounds && allRounds.length > 0) {
     const today = new Date()
@@ -66,22 +67,18 @@ export default async function CategoriaPublicDetailPage({
       }
     }
 
-    // Si no hay fecha en curso, buscar la próxima fecha
-    if (!currentRoundNumber) {
-      for (const round of allRounds) {
-        const start = new Date(round.period_start + 'T00:00:00')
-        start.setHours(0, 0, 0, 0)
+    // Filtrar fechas visibles: solo pasadas y la vigente (no futuras)
+    visibleRounds = allRounds.filter(round => {
+      const start = new Date(round.period_start + 'T00:00:00')
+      start.setHours(0, 0, 0, 0)
 
-        if (today < start) {
-          currentRoundNumber = round.round_number
-          break
-        }
-      }
-    }
+      // Incluir si es la fecha vigente o si ya comenzó
+      return round.round_number === currentRoundNumber || today >= start
+    })
 
-    // Si todas ya pasaron, mostrar la última
-    if (!currentRoundNumber) {
-      currentRoundNumber = allRounds[allRounds.length - 1].round_number
+    // Si no hay fecha en curso pero hay fechas pasadas, tomar la última pasada
+    if (!currentRoundNumber && visibleRounds.length > 0) {
+      currentRoundNumber = visibleRounds[visibleRounds.length - 1].round_number
     }
   }
 
@@ -138,7 +135,7 @@ export default async function CategoriaPublicDetailPage({
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">📅 Fixture</h2>
                 <RoundSelector
-                  rounds={allRounds || []}
+                  rounds={visibleRounds || []}
                   selectedRoundNumber={selectedRoundNumber}
                 />
               </div>
