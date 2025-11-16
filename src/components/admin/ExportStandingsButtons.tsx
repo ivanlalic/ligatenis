@@ -129,14 +129,14 @@ export default function ExportStandingsButtons({
         const setsDiff = s.sets_won - s.sets_lost
         const gamesDiff = s.games_won - s.games_lost
         data.push([
-          s.position,
+          s.position.toString(),
           `${s.player.last_name}, ${s.player.first_name}`,
-          s.matches_played,
-          s.matches_won,
-          s.matches_lost,
-          s.points,
-          setsDiff > 0 ? `+${setsDiff}` : setsDiff,
-          gamesDiff > 0 ? `+${gamesDiff}` : gamesDiff,
+          s.matches_played.toString(),
+          s.matches_won.toString(),
+          s.matches_lost.toString(),
+          s.points.toString(),
+          setsDiff > 0 ? `+${setsDiff}` : setsDiff.toString(),
+          gamesDiff > 0 ? `+${gamesDiff}` : gamesDiff.toString(),
         ])
       })
 
