@@ -37,11 +37,15 @@ export default async function CategoriaPublicDetailPage({
     .order('position', { ascending: true })
 
   // Obtener todas las fechas con información completa
-  const { data: allRounds } = await supabase
+  console.log('Category ID:', params.id)
+  const { data: allRounds, error: roundsError } = await supabase
     .from('rounds')
     .select('id, round_number, period_start, period_end, closed_by_admin_at')
     .eq('category_id', params.id)
     .order('round_number', { ascending: true })
+
+  console.log('Rounds query error:', roundsError)
+  console.log('Raw rounds data:', allRounds)
 
   // Determinar la fecha vigente basado en fechas cerradas
   let currentRoundNumber: number | null = null
