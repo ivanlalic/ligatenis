@@ -111,43 +111,17 @@ export default async function AdminDashboard() {
         )}
       </div>
 
-      {/* Accesos rápidos */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      {/* Acceso rápido */}
+      <div className="mt-8">
         <Link
           href="/admin/jugadores"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg border-2 border-gray-100 hover:border-celeste-400 transition group"
+          className="bg-white p-6 rounded-lg shadow hover:shadow-lg border-2 border-gray-100 hover:border-celeste-400 transition group block"
         >
           <div className="flex items-center gap-4">
             <div className="text-4xl">👥</div>
             <div>
               <h3 className="font-heading font-bold text-gray-900 group-hover:text-primary-900 transition">Gestionar Jugadores</h3>
-              <p className="text-sm text-gray-600">Ver, crear y editar jugadores</p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          href="/admin/fixture"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg border-2 border-gray-100 hover:border-celeste-400 transition group"
-        >
-          <div className="flex items-center gap-4">
-            <div className="text-4xl">📅</div>
-            <div>
-              <h3 className="font-heading font-bold text-gray-900 group-hover:text-primary-900 transition">Generar Fixture</h3>
-              <p className="text-sm text-gray-600">Crear fixture de temporada</p>
-            </div>
-          </div>
-        </Link>
-
-        <Link
-          href="/admin/resultados"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg border-2 border-gray-100 hover:border-celeste-400 transition group"
-        >
-          <div className="flex items-center gap-4">
-            <div className="text-4xl">✍️</div>
-            <div>
-              <h3 className="font-heading font-bold text-gray-900 group-hover:text-primary-900 transition">Cargar Resultados</h3>
-              <p className="text-sm text-gray-600">Registrar partidos jugados</p>
+              <p className="text-sm text-gray-600">Ver, crear y editar jugadores de todas las categorías</p>
             </div>
           </div>
         </Link>
