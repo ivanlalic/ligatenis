@@ -356,28 +356,28 @@ export default async function CategoriaDetailPage({
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gradient-to-r from-primary-900 to-primary-950 text-white">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                    <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium uppercase">
                       Pos
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">
+                    <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium uppercase">
                       Jugador
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
+                    <th className="px-2 sm:px-6 py-3 text-center text-xs font-medium uppercase">
                       PJ
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
+                    <th className="px-2 sm:px-6 py-3 text-center text-xs font-medium uppercase">
                       G
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
+                    <th className="px-2 sm:px-6 py-3 text-center text-xs font-medium uppercase">
                       P
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase">
+                    <th className="px-2 sm:px-6 py-3 text-center text-xs font-medium uppercase">
                       Pts
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase" title="Diferencia de sets (ganados - perdidos)">
+                    <th className="px-2 sm:px-6 py-3 text-center text-xs font-medium uppercase" title="Diferencia de sets (ganados - perdidos)">
                       Dif. Sets
                     </th>
-                    <th className="px-6 py-3 text-center text-xs font-medium uppercase" title="Diferencia de games (ganados - perdidos)">
+                    <th className="px-2 sm:px-6 py-3 text-center text-xs font-medium uppercase" title="Diferencia de games (ganados - perdidos)">
                       Dif. Games
                     </th>
                   </tr>
@@ -388,30 +388,30 @@ export default async function CategoriaDetailPage({
                     const gamesDiff = s.games_won - s.games_lost
                     return (
                       <tr key={s.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-primary-900">
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono font-bold text-primary-900">
                           {s.position}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                           {s.player?.last_name}, {s.player?.first_name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 text-center">
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono text-gray-900 text-center">
                           {s.matches_played}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 text-center">
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono text-gray-900 text-center">
                           {s.matches_won}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900 text-center">
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono text-gray-900 text-center">
                           {s.matches_lost}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-primary-900 text-center">
+                        <td className="px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono font-bold text-primary-900 text-center">
                           {s.points}
                         </td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-mono text-center font-medium ${
+                        <td className={`px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono text-center font-medium ${
                           setsDiff > 0 ? 'text-green-600' : setsDiff < 0 ? 'text-red-600' : 'text-gray-500'
                         }`}>
                           {setsDiff > 0 ? '+' : ''}{setsDiff}
                         </td>
-                        <td className={`px-6 py-4 whitespace-nowrap text-sm font-mono text-center font-medium ${
+                        <td className={`px-2 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-mono text-center font-medium ${
                           gamesDiff > 0 ? 'text-green-600' : gamesDiff < 0 ? 'text-red-600' : 'text-gray-500'
                         }`}>
                           {gamesDiff > 0 ? '+' : ''}{gamesDiff}
@@ -455,13 +455,13 @@ export default async function CategoriaDetailPage({
           {rounds && rounds.length > 0 ? (
             rounds.map((round: any) => (
               <div key={round.id} className="bg-white rounded-lg shadow">
-                <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-900/5 to-celeste-400/10">
-                  <div className="flex items-center justify-between mb-3">
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-900/5 to-celeste-400/10">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                     <div className="flex-1">
-                      <h3 className="text-lg font-heading font-bold text-primary-900">
+                      <h3 className="text-base sm:text-lg font-heading font-bold text-primary-900">
                         Fecha {round.round_number}
                       </h3>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-xs sm:text-sm text-gray-600">
                         {round.period_start && round.period_end
                           ? (() => {
                               // Parsear fechas en zona horaria local para evitar problemas con UTC
@@ -474,7 +474,7 @@ export default async function CategoriaDetailPage({
                           : 'Sin fecha asignada'}
                       </p>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2">
                       <ExportFixtureButtons
                         categoryName={category.name}
                         seasonYear={category.season_year}
@@ -489,7 +489,7 @@ export default async function CategoriaDetailPage({
                         currentPeriodEnd={round.period_end}
                       />
                       <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                           round.status === 'completed'
                             ? 'bg-green-100 text-green-800'
                             : round.status === 'active'
@@ -514,9 +514,9 @@ export default async function CategoriaDetailPage({
                     />
                   </div>
                 </div>
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   {round.matches && round.matches.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       {round.matches.map((match: any) => {
                         return (
                           <div
@@ -532,7 +532,7 @@ export default async function CategoriaDetailPage({
                             <div className="space-y-3">
                               {/* Sin resultado - formato compacto */}
                               {!match.winner_id && !match.is_not_reported && (
-                                <div className="text-center text-sm font-medium text-gray-900">
+                                <div className="text-center text-xs sm:text-sm font-medium text-gray-900 break-words">
                                   {match.player1?.last_name}, {match.player1?.first_name} vs {match.player2?.last_name}, {match.player2?.first_name}
                                 </div>
                               )}
@@ -541,33 +541,33 @@ export default async function CategoriaDetailPage({
                               {match.winner_id && !match.is_walkover && (
                                 <div className="space-y-1">
                                   {/* Player 1 */}
-                                  <div className="flex items-center gap-2">
-                                    <div className={`flex-1 text-sm font-medium ${
+                                  <div className="flex items-center gap-1 sm:gap-2">
+                                    <div className={`flex-1 text-xs sm:text-sm font-medium truncate ${
                                       match.winner_id === match.player1_id ? 'text-green-700 font-bold' : 'text-gray-700'
                                     }`}>
                                       {match.player1?.last_name}, {match.player1?.first_name}
                                       {match.winner_id === match.player1_id && ' 🏆'}
                                     </div>
-                                    <div className="flex gap-3 font-mono text-sm min-w-[120px] justify-end">
-                                      <span className="w-8 text-center">{match.set1_player1_games}</span>
-                                      <span className="w-8 text-center">{match.set2_player1_games}</span>
-                                      <span className="w-8 text-center">
+                                    <div className="flex gap-2 sm:gap-3 font-mono text-xs sm:text-sm min-w-[90px] sm:min-w-[120px] justify-end flex-shrink-0">
+                                      <span className="w-6 sm:w-8 text-center">{match.set1_player1_games}</span>
+                                      <span className="w-6 sm:w-8 text-center">{match.set2_player1_games}</span>
+                                      <span className="w-6 sm:w-8 text-center">
                                         {match.set3_player1_games !== null ? match.set3_player1_games : ''}
                                       </span>
                                     </div>
                                   </div>
                                   {/* Player 2 */}
-                                  <div className="flex items-center gap-2">
-                                    <div className={`flex-1 text-sm font-medium ${
+                                  <div className="flex items-center gap-1 sm:gap-2">
+                                    <div className={`flex-1 text-xs sm:text-sm font-medium truncate ${
                                       match.winner_id === match.player2_id ? 'text-green-700 font-bold' : 'text-gray-700'
                                     }`}>
                                       {match.player2?.last_name}, {match.player2?.first_name}
                                       {match.winner_id === match.player2_id && ' 🏆'}
                                     </div>
-                                    <div className="flex gap-3 font-mono text-sm min-w-[120px] justify-end">
-                                      <span className="w-8 text-center">{match.set1_player2_games}</span>
-                                      <span className="w-8 text-center">{match.set2_player2_games}</span>
-                                      <span className="w-8 text-center">
+                                    <div className="flex gap-2 sm:gap-3 font-mono text-xs sm:text-sm min-w-[90px] sm:min-w-[120px] justify-end flex-shrink-0">
+                                      <span className="w-6 sm:w-8 text-center">{match.set1_player2_games}</span>
+                                      <span className="w-6 sm:w-8 text-center">{match.set2_player2_games}</span>
+                                      <span className="w-6 sm:w-8 text-center">
                                         {match.set3_player2_games !== null ? match.set3_player2_games : ''}
                                       </span>
                                     </div>
@@ -578,11 +578,11 @@ export default async function CategoriaDetailPage({
                               {/* WO */}
                               {match.is_walkover && (
                                 <div className="text-center space-y-1">
-                                  <div className="text-sm font-medium text-gray-900">
+                                  <div className="text-xs sm:text-sm font-medium text-gray-900 break-words">
                                     {match.player1?.last_name}, {match.player1?.first_name} vs {match.player2?.last_name}, {match.player2?.first_name}
                                   </div>
                                   <div>
-                                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">
+                                    <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded break-words inline-block">
                                       WO - Ganador: {match.winner_id === match.player1_id
                                         ? `${match.player1?.last_name}, ${match.player1?.first_name}`
                                         : `${match.player2?.last_name}, ${match.player2?.first_name}`}
@@ -594,7 +594,7 @@ export default async function CategoriaDetailPage({
                               {/* No reportado */}
                               {match.is_not_reported && (
                                 <div className="text-center space-y-1">
-                                  <div className="text-sm font-medium text-gray-900">
+                                  <div className="text-xs sm:text-sm font-medium text-gray-900 break-words">
                                     {match.player1?.last_name}, {match.player1?.first_name} vs {match.player2?.last_name}, {match.player2?.first_name}
                                   </div>
                                   <div>
@@ -655,29 +655,31 @@ export default async function CategoriaDetailPage({
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <Link
-            href="/admin/categorias"
-            className="text-celeste-500 hover:text-celeste-600 text-sm mb-2 inline-block font-medium"
-          >
-            ← Volver a Categorías
-          </Link>
-          <h1 className="text-3xl font-heading font-bold text-primary-900">{category.name}</h1>
-          <p className="text-celeste-500 mt-1">Temporada {category.season_year}</p>
-        </div>
-        <div className="flex gap-2">
-          <GenerateFixtureButton
-            categoryId={params.id}
-            categoryName={category.name}
-            hasFixture={(roundsCount || 0) > 0}
-          />
-          <Link
-            href={`/admin/categorias/${params.id}/editar`}
-            className="px-4 py-2 bg-celeste-400 text-primary-950 rounded-lg hover:bg-celeste-500 transition shadow-md"
-          >
-            ✏️ Editar
-          </Link>
+      <div className="mb-8">
+        <Link
+          href="/admin/categorias"
+          className="text-celeste-500 hover:text-celeste-600 text-sm mb-2 inline-block font-medium"
+        >
+          ← Volver a Categorías
+        </Link>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-heading font-bold text-primary-900">{category.name}</h1>
+            <p className="text-celeste-500 mt-1">Temporada {category.season_year}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <GenerateFixtureButton
+              categoryId={params.id}
+              categoryName={category.name}
+              hasFixture={(roundsCount || 0) > 0}
+            />
+            <Link
+              href={`/admin/categorias/${params.id}/editar`}
+              className="px-4 py-2 bg-celeste-400 text-primary-950 rounded-lg hover:bg-celeste-500 transition shadow-md text-sm sm:text-base"
+            >
+              ✏️ Editar
+            </Link>
+          </div>
         </div>
       </div>
 
