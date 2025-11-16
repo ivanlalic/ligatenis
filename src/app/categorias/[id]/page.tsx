@@ -3,6 +3,10 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import RoundSelector from '@/components/public/RoundSelector'
 
+// Deshabilitar cache estático - siempre datos frescos
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function CategoriaPublicDetailPage({
   params,
   searchParams,
