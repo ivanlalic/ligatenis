@@ -109,19 +109,27 @@ export default async function CategoriaPublicDetailPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary-600 text-white py-8">
+      <div className="bg-primary-600 text-white py-6 md:py-8">
         <div className="max-w-6xl mx-auto px-4">
-          <Link
-            href="/categorias"
-            className="text-sm hover:underline mb-2 inline-block opacity-90"
-          >
-            ← Volver a categorías
-          </Link>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="text-4xl">🏆</div>
+          <div className="flex items-center justify-between mb-4">
+            <Link
+              href="/categorias"
+              className="text-sm hover:underline opacity-90"
+            >
+              ← Volver
+            </Link>
+            <Link
+              href="/admin"
+              className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-600 rounded-lg hover:bg-gray-100 transition text-xs md:text-sm font-medium shadow-md"
+            >
+              Admin
+            </Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="text-3xl md:text-4xl">🏆</div>
             <div>
-              <h1 className="text-4xl font-bold">{category.name}</h1>
-              <p className="text-primary-100 mt-1">Temporada {category.season_year}</p>
+              <h1 className="text-2xl md:text-4xl font-bold">{category.name}</h1>
+              <p className="text-primary-100 mt-1 text-sm md:text-base">Temporada {category.season_year}</p>
             </div>
           </div>
         </div>

@@ -25,16 +25,20 @@ export default async function CategoriasPublicPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary-600 text-white py-8">
+      <div className="bg-primary-600 text-white py-6 md:py-8">
         <div className="max-w-6xl mx-auto px-4">
-          <Link
-            href="/"
-            className="text-sm hover:underline mb-2 inline-block opacity-90"
-          >
-            ← Volver al inicio
-          </Link>
-          <h1 className="text-4xl font-bold">🎾 Liga de Tenis 2026</h1>
-          <p className="text-primary-100 mt-2">Categorías del torneo</p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-2xl md:text-4xl font-bold">🎾 Liga de Tenis 2026</h1>
+              <p className="text-primary-100 mt-1 text-sm md:text-base">Categorías del torneo</p>
+            </div>
+            <Link
+              href="/admin"
+              className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-600 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-md"
+            >
+              Admin
+            </Link>
+          </div>
         </div>
       </div>
 
