@@ -18,14 +18,14 @@ export default function CategoryTabs({
   return (
     <div>
       {/* Tabs Header */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
+      <div className="border-b border-gray-200 mb-6 overflow-x-auto">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 min-w-min">
           {tabs.map((tab, index) => (
             <button
               key={index}
               onClick={() => setActiveTab(index)}
               className={`
-                whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+                whitespace-nowrap py-3 sm:py-4 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex-shrink-0
                 ${
                   activeTab === index
                     ? 'border-primary-600 text-primary-600'
@@ -33,7 +33,7 @@ export default function CategoryTabs({
                 }
               `}
             >
-              <span className="mr-2">{tab.icon}</span>
+              <span className="mr-1 sm:mr-2">{tab.icon}</span>
               {tab.label}
             </button>
           ))}
