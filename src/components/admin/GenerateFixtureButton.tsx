@@ -59,7 +59,7 @@ export default function GenerateFixtureButton({
       <button
         onClick={handleDelete}
         disabled={isLoading}
-        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
       >
         {isLoading ? 'Eliminando...' : '🗑️ Eliminar Fixture'}
       </button>
@@ -70,7 +70,7 @@ export default function GenerateFixtureButton({
     <>
       <button
         onClick={() => setShowModal(true)}
-        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+        className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
       >
         ⚡ Generar Fixture
       </button>
@@ -132,7 +132,7 @@ export default function GenerateFixtureButton({
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
                 >
                   {isLoading ? 'Generando...' : 'Generar'}
                 </button>
@@ -140,7 +140,7 @@ export default function GenerateFixtureButton({
                   type="button"
                   onClick={() => setShowModal(false)}
                   disabled={isLoading}
-                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+                  className="flex-1 px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition font-medium"
                 >
                   Cancelar
                 </button>

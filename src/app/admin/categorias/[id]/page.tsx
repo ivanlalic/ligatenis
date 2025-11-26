@@ -91,7 +91,7 @@ export default async function CategoriaDetailPage({
         <div className="space-y-6">
           {/* Estadísticas */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-primary-900">
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Jugadores Activos</p>
@@ -101,7 +101,7 @@ export default async function CategoriaDetailPage({
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-celeste-400">
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Fechas Generadas</p>
@@ -111,7 +111,7 @@ export default async function CategoriaDetailPage({
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow border-l-4 border-primary-900">
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Partidos Totales</p>
@@ -123,7 +123,7 @@ export default async function CategoriaDetailPage({
           </div>
 
           {/* Información detallada */}
-          <div className="bg-white p-6 rounded-lg shadow">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <h2 className="text-xl font-heading font-bold text-primary-900 mb-4">Detalles</h2>
             <dl className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -197,8 +197,8 @@ export default async function CategoriaDetailPage({
 
           {/* Jugadores activos */}
           {activePlayers.length > 0 && (
-            <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-900 to-primary-950">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200 bg-primary-900">
                 <h3 className="text-lg font-heading font-bold text-white">
                   Activos ({activePlayers.length})
                 </h3>
@@ -253,8 +253,8 @@ export default async function CategoriaDetailPage({
 
           {/* Jugadores inactivos */}
           {inactivePlayers.length > 0 && (
-            <div className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-100">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
                 <h3 className="text-lg font-heading font-bold text-gray-700">
                   Inactivos ({inactivePlayers.length})
                 </h3>
@@ -310,7 +310,7 @@ export default async function CategoriaDetailPage({
           )}
 
           {(!players || players.length === 0) && (
-            <div className="bg-white p-12 rounded-lg shadow text-center">
+            <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
               <div className="text-6xl mb-4">👥</div>
               <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                 No hay jugadores en esta categoría
@@ -320,7 +320,7 @@ export default async function CategoriaDetailPage({
               </p>
               <Link
                 href="/admin/jugadores/nuevo"
-                className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
+                className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-sm"
               >
                 Agregar Jugador
               </Link>
@@ -352,9 +352,9 @@ export default async function CategoriaDetailPage({
           )}
 
           {standings && standings.length > 0 ? (
-            <div className="bg-white rounded-lg shadow overflow-x-auto border-t-4 border-primary-900">
+            <div className="bg-white rounded-lg shadow-sm overflow-x-auto border border-gray-200">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gradient-to-r from-primary-900 to-primary-950 text-white">
+                <thead className="bg-primary-900 text-white">
                   <tr>
                     <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium uppercase">
                       Pos
@@ -423,7 +423,7 @@ export default async function CategoriaDetailPage({
               </table>
             </div>
           ) : (
-            <div className="bg-white p-12 rounded-lg shadow text-center">
+            <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
               <div className="text-6xl mb-4">📈</div>
               <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                 Tabla de posiciones no disponible
@@ -454,8 +454,8 @@ export default async function CategoriaDetailPage({
 
           {rounds && rounds.length > 0 ? (
             rounds.map((round: any) => (
-              <div key={round.id} className="bg-white rounded-lg shadow">
-                <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-primary-900/5 to-celeste-400/10">
+              <div key={round.id} className="bg-white rounded-lg shadow-sm border border-gray-200">
+                <div className="px-4 sm:px-6 py-4 border-b border-gray-200 bg-gray-50">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
                     <div className="flex-1">
                       <h3 className="text-base sm:text-lg font-heading font-bold text-primary-900">
@@ -628,7 +628,7 @@ export default async function CategoriaDetailPage({
               </div>
             ))
           ) : (
-            <div className="bg-white p-12 rounded-lg shadow text-center">
+            <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
               <div className="text-6xl mb-4">📅</div>
               <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
                 Fixture no generado
@@ -641,7 +641,7 @@ export default async function CategoriaDetailPage({
               {activePlayers.length < 2 && (
                 <Link
                   href="/admin/jugadores/nuevo"
-                  className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
+                  className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-sm"
                 >
                   Agregar Jugador
                 </Link>

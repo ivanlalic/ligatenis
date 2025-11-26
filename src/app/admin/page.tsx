@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
 
       {/* Estadísticas generales */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-primary-900">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Categorías</p>
@@ -42,7 +42,7 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-celeste-400">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Jugadores Activos</p>
@@ -52,7 +52,7 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-primary-900">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Fechas Generadas</p>
@@ -62,7 +62,7 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow border-l-4 border-celeste-400">
+        <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-primary-900">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Partidos Totales</p>
@@ -74,12 +74,12 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Categorías */}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-heading font-bold text-primary-900">Categorías</h2>
           <Link
             href="/admin/categorias/nueva"
-            className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
+            className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-sm"
           >
             + Nueva Categoría
           </Link>
@@ -115,7 +115,7 @@ export default async function AdminDashboard() {
       <div className="mt-8">
         <Link
           href="/admin/jugadores"
-          className="bg-white p-6 rounded-lg shadow hover:shadow-lg border-2 border-gray-100 hover:border-celeste-400 transition group block"
+          className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md border border-gray-200 hover:border-primary-900 transition group block"
         >
           <div className="flex items-center gap-4">
             <div className="text-4xl">👥</div>

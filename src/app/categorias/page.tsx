@@ -25,7 +25,7 @@ export default async function CategoriasPublicPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary-900 to-primary-950 text-white py-6 md:py-8 shadow-lg">
+      <div className="bg-primary-900 text-white py-6 md:py-8 shadow-md">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -34,7 +34,7 @@ export default async function CategoriasPublicPage() {
             </div>
             <Link
               href="/admin"
-              className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-celeste-100 transition text-sm md:text-base font-medium shadow-md"
+              className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-sm"
             >
               Admin
             </Link>
@@ -50,7 +50,7 @@ export default async function CategoriasPublicPage() {
               <Link
                 key={cat.id}
                 href={`/categorias/${cat.id}`}
-                className="bg-white p-6 rounded-lg border-2 border-gray-200 shadow hover:shadow-xl hover:border-primary-900 transition-all duration-300 block group"
+                className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-900 transition-all duration-200 block group"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-4xl">🏆</div>
@@ -71,7 +71,7 @@ export default async function CategoriasPublicPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white p-12 rounded-lg shadow text-center">
+          <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
             <div className="text-6xl mb-4">🎾</div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
               No hay categorías disponibles

@@ -44,7 +44,7 @@ export default async function CategoriasPage() {
           {categoriesWithCounts.map((cat, index) => (
             <div
               key={cat.id}
-              className="bg-white p-6 rounded-lg shadow hover:shadow-md transition border-l-4 border-primary-900"
+              className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition border-l-4 border-primary-900"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
@@ -80,7 +80,7 @@ export default async function CategoriasPage() {
           ))}
         </div>
       ) : (
-        <div className="bg-white p-12 rounded-lg shadow text-center">
+        <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
           <div className="text-6xl mb-4">🏆</div>
           <h3 className="text-xl font-heading font-bold text-primary-900 mb-2">
             No hay categorías creadas
@@ -90,7 +90,7 @@ export default async function CategoriasPage() {
           </p>
           <Link
             href="/admin/categorias/nueva"
-            className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-md"
+            className="inline-block px-6 py-3 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-sm"
           >
             Crear Primera Categoría
           </Link>

@@ -110,7 +110,7 @@ export default async function CategoriaPublicDetailPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary-900 to-primary-950 text-white py-6 md:py-8 shadow-lg">
+      <div className="bg-primary-900 text-white py-6 md:py-8 shadow-md">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-4">
             <Link
@@ -121,7 +121,7 @@ export default async function CategoriaPublicDetailPage({
             </Link>
             <Link
               href="/admin"
-              className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-celeste-100 transition text-xs md:text-sm font-medium shadow-md"
+              className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-xs md:text-sm font-medium shadow-sm"
             >
               Admin
             </Link>
@@ -141,7 +141,7 @@ export default async function CategoriaPublicDetailPage({
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content - Fixture */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-heading font-bold text-primary-900">📅 Fixture</h2>
                 <RoundSelector
@@ -328,7 +328,7 @@ export default async function CategoriaPublicDetailPage({
 
           {/* Sidebar - Standings */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-8 border-t-4 border-primary-900">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sticky top-8">
               <div className="mb-4">
                 <h2 className="text-xl font-heading font-bold text-primary-900">📈 Tabla de Posiciones</h2>
                 {lastClosedRoundNumber && (
@@ -341,7 +341,7 @@ export default async function CategoriaPublicDetailPage({
               {standings && standings.length > 0 ? (
                 <div className="overflow-x-auto -mx-6">
                   <table className="min-w-full">
-                    <thead className="bg-gradient-to-r from-primary-900 to-primary-950 text-white">
+                    <thead className="bg-primary-900 text-white">
                       <tr>
                         <th className="px-2 py-2 text-left text-xs font-medium uppercase">
                           Pos
