@@ -128,7 +128,7 @@ export async function generateFixture(
         round_number: roundIndex + 1,
         period_start: roundDate.toISOString().split('T')[0],
         period_end: periodEnd.toISOString().split('T')[0],
-        status: 'pending'
+        status: 'active'
       }])
       .select()
       .single()
