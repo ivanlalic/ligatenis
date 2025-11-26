@@ -121,6 +121,7 @@ export async function generateFixture(
     }
 
     // Crear la jornada
+    // Solo la primera fecha es 'active', el resto 'pending' (se activan al cerrar la anterior)
     const { data: round, error: roundError } = await supabase
       .from('rounds')
       .insert([{
@@ -128,7 +129,7 @@ export async function generateFixture(
         round_number: roundIndex + 1,
         period_start: roundDate.toISOString().split('T')[0],
         period_end: periodEnd.toISOString().split('T')[0],
-        status: 'active'
+        status: roundIndex === 0 ? 'active' : 'pending'
       }])
       .select()
       .single()

@@ -116,6 +116,24 @@ export async function GET(request: NextRequest) {
         // Recalcular tabla de posiciones
         await recalculateStandings(supabase, round.category_id)
 
+        // Activar la siguiente fecha (si existe y está pending)
+        const { data: nextRound } = await supabase
+          .from('rounds')
+          .select('id, round_number')
+          .eq('category_id', round.category_id)
+          .eq('round_number', round.round_number + 1)
+          .eq('status', 'pending')
+          .single()
+
+        if (nextRound) {
+          await supabase
+            .from('rounds')
+            .update({ status: 'active' })
+            .eq('id', nextRound.id)
+
+          console.log(`[CRON] Activated next round ${nextRound.id} (round ${nextRound.round_number})`)
+        }
+
         results.push({
           roundId: round.id,
           roundNumber: round.round_number,

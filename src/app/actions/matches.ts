@@ -385,10 +385,10 @@ export async function submitPlayerMatchResult(formData: FormData) {
 export async function closeRound(roundId: string) {
   const supabase = await createClient()
 
-  // Obtener la ronda para saber la categoría
+  // Obtener la ronda para saber la categoría y número
   const { data: round } = await supabase
     .from('rounds')
-    .select('category_id')
+    .select('category_id, round_number')
     .eq('id', roundId)
     .single()
 
@@ -408,6 +408,7 @@ export async function closeRound(roundId: string) {
     throw new Error(`Hay ${pendingMatches.length} partido(s) sin resultado. Todos los partidos deben tener un resultado cargado o estar marcados como "no reportado" antes de cerrar la fecha.`)
   }
 
+  // Cerrar la ronda actual
   const { error } = await supabase
     .from('rounds')
     .update({
@@ -424,7 +425,24 @@ export async function closeRound(roundId: string) {
   // Recalcular tabla de posiciones al cerrar la fecha
   await recalculateStandings(round.category_id)
 
+  // Activar la siguiente fecha (si existe y está pending)
+  const { data: nextRound } = await supabase
+    .from('rounds')
+    .select('id')
+    .eq('category_id', round.category_id)
+    .eq('round_number', round.round_number + 1)
+    .eq('status', 'pending')
+    .single()
+
+  if (nextRound) {
+    await supabase
+      .from('rounds')
+      .update({ status: 'active' })
+      .eq('id', nextRound.id)
+  }
+
   revalidatePath('/admin/categorias')
   revalidatePath(`/admin/categorias/${round.category_id}`)
   revalidatePath('/categorias')
+  revalidatePath('/jugador/dashboard')
 }
