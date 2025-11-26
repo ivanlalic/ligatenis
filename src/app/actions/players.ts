@@ -27,49 +27,55 @@ function generateSecurePassword(): string {
 }
 
 export async function createPlayer(formData: FormData) {
-  const supabase = await createClient()
+  try {
+    const supabase = await createClient()
 
-  const categoryId = formData.get('category_id') as string
-  const redirectTo = formData.get('redirect_to') as string | null
-  const createAuthUser = formData.get('create_auth_user') === 'true'
+    const categoryId = formData.get('category_id') as string
+    const redirectTo = formData.get('redirect_to') as string | null
+    const createAuthUser = formData.get('create_auth_user') === 'true'
 
-  const playerData = {
-    first_name: formData.get('first_name') as string,
-    last_name: formData.get('last_name') as string,
-    email: formData.get('email') as string,
-    phone: formData.get('phone') as string || null,
-    notes: formData.get('notes') as string || null,
-    initial_category_id: categoryId,
-    current_category_id: categoryId,
-    status: 'active' as const,
-  }
-
-  let generatedPassword: string | null = null
-  let authUserId: string | null = null
-
-  // Si se solicita crear usuario de autenticación
-  if (createAuthUser) {
-    generatedPassword = generateSecurePassword()
-
-    // Usar cliente admin para crear usuario en Supabase Auth
-    const adminClient = createAdminClient()
-    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
-      email: playerData.email,
-      password: generatedPassword,
-      email_confirm: true, // Auto-confirmar email
-      user_metadata: {
-        first_name: playerData.first_name,
-        last_name: playerData.last_name,
-      }
-    })
-
-    if (authError) {
-      console.error('Error creating auth user:', authError.message)
-      throw new Error(`Error al crear usuario: ${authError.message}`)
+    const playerData = {
+      first_name: formData.get('first_name') as string,
+      last_name: formData.get('last_name') as string,
+      email: formData.get('email') as string,
+      phone: formData.get('phone') as string || null,
+      notes: formData.get('notes') as string || null,
+      initial_category_id: categoryId,
+      current_category_id: categoryId,
+      status: 'active' as const,
     }
 
-    authUserId = authData.user.id
-  }
+    let generatedPassword: string | null = null
+    let authUserId: string | null = null
+
+    // Si se solicita crear usuario de autenticación
+    if (createAuthUser) {
+      generatedPassword = generateSecurePassword()
+
+      // Usar cliente admin para crear usuario en Supabase Auth
+      const adminClient = createAdminClient()
+      const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+        email: playerData.email,
+        password: generatedPassword,
+        email_confirm: true, // Auto-confirmar email
+        user_metadata: {
+          first_name: playerData.first_name,
+          last_name: playerData.last_name,
+        }
+      })
+
+      if (authError) {
+        console.error('Error creating auth user:', authError.message)
+        // Redirigir con error en lugar de crashear
+        const errorMessage = authError.message.includes('already been registered')
+          ? 'Este email ya está registrado. Usa otro email o elimina el usuario anterior en Supabase.'
+          : `Error al crear usuario: ${authError.message}`
+
+        redirect(`/admin/jugadores/nuevo?error=${encodeURIComponent(errorMessage)}`)
+      }
+
+      authUserId = authData.user.id
+    }
 
   // Crear jugador en la tabla players
   const { data: player, error: playerError } = await supabase
@@ -88,7 +94,7 @@ export async function createPlayer(formData: FormData) {
       await adminClient.auth.admin.deleteUser(authUserId)
     }
     console.error('Error creating player:', playerError.message)
-    throw new Error(playerError.message)
+    redirect(`/admin/jugadores/nuevo?error=${encodeURIComponent(`Error al crear jugador: ${playerError.message}`)}`)
   }
 
   revalidatePath('/admin')
@@ -117,11 +123,16 @@ export async function createPlayer(formData: FormData) {
     }
   }
 
-  // Redirigir normal si no se creó usuario
-  if (redirectTo && redirectTo.startsWith('/admin/categorias/')) {
-    redirect(redirectTo)
-  } else {
-    redirect('/admin/jugadores')
+    // Redirigir normal si no se creó usuario
+    if (redirectTo && redirectTo.startsWith('/admin/categorias/')) {
+      redirect(redirectTo)
+    } else {
+      redirect('/admin/jugadores')
+    }
+  } catch (error: any) {
+    // Capturar cualquier error no manejado
+    console.error('Unexpected error in createPlayer:', error)
+    redirect(`/admin/jugadores/nuevo?error=${encodeURIComponent(error.message || 'Error inesperado al crear jugador')}`)
   }
 }
 

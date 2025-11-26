@@ -5,7 +5,7 @@ import Link from 'next/link'
 export default async function NuevoJugadorPage({
   searchParams,
 }: {
-  searchParams: { categoria?: string }
+  searchParams: { categoria?: string; error?: string }
 }) {
   const supabase = await createClient()
 
@@ -29,6 +29,21 @@ export default async function NuevoJugadorPage({
             : 'Registra un nuevo jugador en la liga'}
         </p>
       </div>
+
+      {/* Mostrar error si existe */}
+      {searchParams.error && (
+        <div className="max-w-2xl mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <span className="text-red-500 text-xl">❌</span>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Error al crear jugador</h3>
+              <p className="text-sm text-red-700 mt-1">{searchParams.error}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-2xl bg-white p-8 rounded-lg shadow">
         <form action={createPlayer} className="space-y-6">
