@@ -13,6 +13,7 @@ export default function NewPlayerCredentialsModal() {
   const email = searchParams.get('email')
   const password = searchParams.get('password')
   const name = searchParams.get('name')
+  const phone = searchParams.get('phone')
 
   useEffect(() => {
     if (newPlayer === 'true' && email && password) {
@@ -31,6 +32,28 @@ export default function NewPlayerCredentialsModal() {
     navigator.clipboard.writeText(credentials)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleWhatsApp = () => {
+    if (!phone) return
+
+    const loginUrl = `${window.location.origin}/jugador/login`
+    const message = `¡Hola! Tu cuenta de la Liga de Tenis ya está lista 🎾
+
+*Credenciales de acceso:*
+📧 Email: ${email}
+🔑 Contraseña: ${password}
+
+*Link de acceso:*
+${loginUrl}
+
+*Importante:*
+Por favor, cambia tu contraseña en tu primer login.
+
+¡Nos vemos en la cancha!`
+
+    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, '_blank')
   }
 
   if (!show) return null
@@ -98,19 +121,32 @@ export default function NewPlayerCredentialsModal() {
           </ol>
         </div>
 
-        <div className="flex gap-3">
-          <button
-            onClick={handleCopy}
-            className="flex-1 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition font-medium"
-          >
-            {copied ? '✅ Copiado' : '📋 Copiar Credenciales'}
-          </button>
-          <button
-            onClick={handleClose}
-            className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
-          >
-            Cerrar
-          </button>
+        <div className="space-y-3">
+          {/* Botón de WhatsApp (solo si hay teléfono) */}
+          {phone && (
+            <button
+              onClick={handleWhatsApp}
+              className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium flex items-center justify-center gap-2"
+            >
+              <span className="text-xl">💬</span>
+              Enviar por WhatsApp
+            </button>
+          )}
+
+          <div className="flex gap-3">
+            <button
+              onClick={handleCopy}
+              className="flex-1 px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition font-medium"
+            >
+              {copied ? '✅ Copiado' : '📋 Copiar Credenciales'}
+            </button>
+            <button
+              onClick={handleClose}
+              className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium"
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
       </div>
     </div>

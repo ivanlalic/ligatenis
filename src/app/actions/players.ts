@@ -105,6 +105,11 @@ export async function createPlayer(formData: FormData) {
       name: `${playerData.first_name} ${playerData.last_name}`
     })
 
+    // Agregar teléfono si existe
+    if (playerData.phone) {
+      params.set('phone', playerData.phone)
+    }
+
     if (redirectTo && redirectTo.startsWith('/admin/categorias/')) {
       redirect(`${redirectTo}?newPlayer=true&${params.toString()}`)
     } else {
