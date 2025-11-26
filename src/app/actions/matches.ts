@@ -228,15 +228,18 @@ async function recalculateStandings(categoryId: string) {
  * 1. Mayor puntos
  * 2. Mejor diferencia de sets (sets ganados - sets perdidos)
  * 3. Mejor diferencia de games (games ganados - games perdidos)
- * 4. Head to head (enfrentamiento directo) - TODO: implementar
+ * 4. Orden alfabético (apellido, nombre)
  */
-async function calculatePositions(categoryId: string) {
+export async function calculatePositions(categoryId: string) {
   const supabase = await createClient()
 
-  // Obtener la tabla ordenada según criterios de desempate
+  // Obtener la tabla con nombres de jugadores para ordenamiento alfabético
   const { data: standings } = await supabase
     .from('standings')
-    .select('*')
+    .select(`
+      *,
+      player:players(first_name, last_name)
+    `)
     .eq('category_id', categoryId)
 
   if (!standings) {
@@ -264,9 +267,10 @@ async function calculatePositions(categoryId: string) {
       return bGamesDiv - aGamesDiv
     }
 
-    // TODO: 4. Head to head (enfrentamiento directo)
-    // Por ahora si están empatados en todo, mantener orden actual
-    return 0
+    // 4. Orden alfabético (apellido, nombre)
+    const aName = `${a.player.last_name} ${a.player.first_name}`.toLowerCase()
+    const bName = `${b.player.last_name} ${b.player.first_name}`.toLowerCase()
+    return aName.localeCompare(bName)
   })
 
   // Asignar posiciones

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { calculatePositions } from './matches'
 
 /**
  * Algoritmo Round Robin para generar fixture de todos contra todos
@@ -180,6 +181,9 @@ export async function generateFixture(
     console.error('Error creating standings:', standingsError.message)
     throw new Error('Error al crear tabla de posiciones')
   }
+
+  // 6. Calcular posiciones iniciales (ordenadas alfabéticamente)
+  await calculatePositions(categoryId)
 
   revalidatePath('/admin/categorias')
   revalidatePath(`/admin/categorias/${categoryId}`)
