@@ -279,6 +279,107 @@ async function calculatePositions(categoryId: string) {
 }
 
 /**
+ * Permite a un jugador cargar el resultado de su propio partido
+ * Valida que el jugador sea participante y que la ronda esté activa
+ */
+export async function submitPlayerMatchResult(formData: FormData) {
+  const supabase = await createClient()
+
+  // Verificar autenticación
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+  if (authError || !user) {
+    throw new Error('Debes estar autenticado para cargar resultados')
+  }
+
+  // Obtener el jugador del usuario autenticado
+  const { data: player } = await supabase
+    .from('players')
+    .select('id')
+    .eq('auth_user_id', user.id)
+    .single()
+
+  if (!player) {
+    throw new Error('No se encontró tu perfil de jugador')
+  }
+
+  // Obtener datos del formulario
+  const matchId = formData.get('match_id') as string
+  const winnerId = formData.get('winner_id') as string
+  const isWalkover = formData.get('is_walkover') === 'true'
+  const walkoverReason = formData.get('walkover_reason') as string | null
+
+  // Obtener el partido con información de la ronda
+  const { data: match } = await supabase
+    .from('matches')
+    .select('*, round:rounds!inner(*)')
+    .eq('id', matchId)
+    .single()
+
+  if (!match) {
+    throw new Error('Partido no encontrado')
+  }
+
+  // Validar que el jugador sea uno de los participantes
+  if (match.player1_id !== player.id && match.player2_id !== player.id) {
+    throw new Error('No puedes cargar resultados de un partido en el que no participas')
+  }
+
+  // Validar que la ronda esté activa
+  if (match.round.status !== 'active') {
+    throw new Error('Solo se pueden cargar resultados de rondas activas')
+  }
+
+  // Validar que el partido no tenga resultado ya cargado
+  if (match.winner_id !== null) {
+    throw new Error('Este partido ya tiene un resultado cargado')
+  }
+
+  // Preparar datos de actualización
+  const updateData: any = {
+    winner_id: winnerId,
+    is_walkover: isWalkover,
+    walkover_reason: isWalkover ? walkoverReason : null,
+    is_not_reported: false,
+    result_loaded_at: new Date().toISOString()
+  }
+
+  // Si no es WO, obtener los games de cada set
+  if (!isWalkover) {
+    updateData.set1_player1_games = parseInt(formData.get('set1_player1') as string)
+    updateData.set1_player2_games = parseInt(formData.get('set1_player2') as string)
+    updateData.set2_player1_games = parseInt(formData.get('set2_player1') as string)
+    updateData.set2_player2_games = parseInt(formData.get('set2_player2') as string)
+
+    // Set 3 es opcional
+    const set3Player1 = formData.get('set3_player1') as string
+    const set3Player2 = formData.get('set3_player2') as string
+
+    if (set3Player1 && set3Player2) {
+      updateData.set3_player1_games = parseInt(set3Player1)
+      updateData.set3_player2_games = parseInt(set3Player2)
+    }
+  }
+
+  // Actualizar el partido
+  const { error: matchError } = await supabase
+    .from('matches')
+    .update(updateData)
+    .eq('id', matchId)
+
+  if (matchError) {
+    console.error('Error updating match:', matchError.message)
+    throw new Error('Error al cargar el resultado')
+  }
+
+  // Recalcular tabla de posiciones
+  await recalculateStandings(match.category_id)
+
+  revalidatePath('/jugador/dashboard')
+  revalidatePath('/categorias')
+}
+
+/**
  * Cierra una jornada (marca como completada)
  */
 export async function closeRound(roundId: string) {
