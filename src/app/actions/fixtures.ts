@@ -155,7 +155,8 @@ export async function generateFixture(
     }
   }
 
-  // 5. Crear registros iniciales en la tabla de posiciones
+  // 5. Crear registros iniciales en la tabla de posiciones (si no existen)
+  // Usar ignoreDuplicates para no fallar si ya existen por auto-creación al agregar jugadores
   const standingsRecords = players.map(player => ({
     category_id: categoryId,
     player_id: player.id,
@@ -164,6 +165,8 @@ export async function generateFixture(
     matches_played: 0,
     matches_won: 0,
     matches_lost: 0,
+    matches_won_by_wo: 0,
+    matches_lost_by_wo: 0,
     sets_won: 0,
     sets_lost: 0,
     games_won: 0,
@@ -172,7 +175,7 @@ export async function generateFixture(
 
   const { error: standingsError } = await supabase
     .from('standings')
-    .insert(standingsRecords)
+    .insert(standingsRecords, { ignoreDuplicates: true })
 
   if (standingsError) {
     console.error('Error creating standings:', standingsError.message)
