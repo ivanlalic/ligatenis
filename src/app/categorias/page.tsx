@@ -29,7 +29,7 @@ export default async function CategoriasPublicPage() {
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl md:text-4xl font-heading font-bold">🎾 Liga de Tenis Plaza Jewell</h1>
+              <h1 className="text-2xl md:text-4xl font-heading font-bold">🎾 Liga de Tenis del Club Atletico del Rosario</h1>
               <p className="text-celeste-300 mt-1 text-sm md:text-base">Temporada 2026</p>
             </div>
             <Link
