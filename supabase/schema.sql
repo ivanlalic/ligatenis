@@ -68,7 +68,7 @@ CREATE TABLE rounds (
   period_end DATE NOT NULL,
 
   -- Estado
-  status TEXT NOT NULL DEFAULT 'pending'
+  status TEXT NOT NULL DEFAULT 'active'
     CHECK (status IN ('pending', 'active', 'completed', 'expired')),
 
   -- Metadata

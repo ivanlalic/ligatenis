@@ -97,6 +97,30 @@ export async function createPlayer(formData: FormData) {
     redirect(`/admin/jugadores/nuevo?error=${encodeURIComponent(`Error al crear jugador: ${playerError.message}`)}`)
   }
 
+  // Crear registro inicial en standings para este jugador
+  const { error: standingsError } = await supabase
+    .from('standings')
+    .insert({
+      category_id: categoryId,
+      player_id: player.id,
+      position: 0, // Se calculará después
+      points: 0,
+      matches_played: 0,
+      matches_won: 0,
+      matches_lost: 0,
+      matches_won_by_wo: 0,
+      matches_lost_by_wo: 0,
+      sets_won: 0,
+      sets_lost: 0,
+      games_won: 0,
+      games_lost: 0
+    })
+
+  if (standingsError) {
+    console.error('Error creating standings:', standingsError.message)
+    // No fallar, solo log - el jugador ya fue creado
+  }
+
   revalidatePath('/admin')
   revalidatePath('/admin/jugadores')
   revalidatePath(`/admin/categorias/${categoryId}`)
