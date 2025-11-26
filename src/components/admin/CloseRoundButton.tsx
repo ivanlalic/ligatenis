@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { closeRound } from '@/app/actions/matches'
-import { reopenRound } from '@/app/actions/rounds'
+import { closeRound, reopenRound } from '@/app/actions/matches'
 
 interface CloseRoundButtonProps {
   roundId: string
@@ -49,11 +48,12 @@ export default function CloseRoundButton({
     }
   }
 
-  if (status === 'completed') {
+  // Fechas cerradas (completed o expired) pueden reabrirse
+  if (status === 'completed' || status === 'expired') {
     return (
       <div className="flex items-center gap-3">
         <span className="text-sm text-green-600 font-medium">
-          ✅ Fecha cerrada
+          {status === 'completed' ? '✅ Fecha cerrada' : '⏰ Fecha cerrada automáticamente'}
         </span>
         <button
           onClick={handleReopen}
