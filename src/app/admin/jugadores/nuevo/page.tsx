@@ -136,24 +136,25 @@ export default async function NuevoJugadorPage({
             </p>
           </div>
 
-          {/* Opción para crear usuario de autenticación */}
+          {/* Info sobre autenticación automática */}
           <div className="bg-celeste-50 border-l-4 border-celeste-500 p-4 rounded">
             <div className="flex items-start">
               <input
-                type="checkbox"
-                id="create_auth_user"
+                type="hidden"
                 name="create_auth_user"
                 value="true"
-                defaultChecked={true}
-                className="mt-1 mr-3 h-4 w-4 text-primary-900 focus:ring-primary-500 border-gray-300 rounded"
               />
+              <div className="flex-shrink-0 mr-3">
+                <span className="text-2xl">🔐</span>
+              </div>
               <div className="flex-1">
-                <label htmlFor="create_auth_user" className="block text-sm font-medium text-gray-900 cursor-pointer">
-                  🔐 Crear usuario de autenticación
-                </label>
+                <h3 className="text-sm font-medium text-gray-900">
+                  Usuario de autenticación
+                </h3>
                 <p className="mt-1 text-sm text-gray-600">
-                  El jugador podrá ingresar a la plataforma y cargar resultados de sus partidos.
-                  Se generará automáticamente un email y contraseña que deberás entregarle.
+                  Se creará automáticamente un usuario para que el jugador pueda ingresar
+                  a la plataforma y cargar resultados de sus partidos. Se generará un email
+                  y contraseña que deberás entregarle.
                 </p>
               </div>
             </div>
