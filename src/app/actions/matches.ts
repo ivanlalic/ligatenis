@@ -446,3 +446,46 @@ export async function closeRound(roundId: string) {
   revalidatePath('/categorias')
   revalidatePath('/jugador/dashboard')
 }
+
+/**
+ * Reabre una jornada cerrada para corregir resultados
+ * No afecta las fechas posteriores
+ */
+export async function reopenRound(roundId: string) {
+  const supabase = await createClient()
+
+  // Obtener la ronda
+  const { data: round } = await supabase
+    .from('rounds')
+    .select('category_id, round_number, status')
+    .eq('id', roundId)
+    .single()
+
+  if (!round) {
+    throw new Error('Ronda no encontrada')
+  }
+
+  // Verificar que esté cerrada
+  if (round.status !== 'completed' && round.status !== 'expired') {
+    throw new Error('Solo se pueden reabrir fechas cerradas (completed o expired)')
+  }
+
+  // Reabrir la ronda
+  const { error } = await supabase
+    .from('rounds')
+    .update({
+      status: 'active',
+      closed_by_admin_at: null
+    })
+    .eq('id', roundId)
+
+  if (error) {
+    console.error('Error reopening round:', error.message)
+    throw new Error('Error al reabrir la jornada')
+  }
+
+  revalidatePath('/admin/categorias')
+  revalidatePath(`/admin/categorias/${round.category_id}`)
+  revalidatePath('/categorias')
+  revalidatePath('/jugador/dashboard')
+}
