@@ -295,11 +295,11 @@ export default async function PlayerDashboardPage() {
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 items-center">
-                        <div className={`font-medium ${isPlayer1 ? 'text-primary-900' : ''}`}>
+                        <div className={`font-medium text-gray-900 ${isPlayer1 ? 'font-bold text-primary-900' : ''}`}>
                           {match.player1.first_name} {match.player1.last_name}
                           {isPlayer1 && ' (Tú)'}
                         </div>
-                        <div className={`font-medium ${!isPlayer1 ? 'text-primary-900' : ''}`}>
+                        <div className={`font-medium text-gray-900 ${!isPlayer1 ? 'font-bold text-primary-900' : ''}`}>
                           {match.player2.first_name} {match.player2.last_name}
                           {!isPlayer1 && ' (Tú)'}
                         </div>
