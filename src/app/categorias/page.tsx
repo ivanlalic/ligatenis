@@ -4,6 +4,20 @@ import Link from 'next/link'
 export default async function CategoriasPublicPage() {
   const supabase = await createClient()
 
+  // Verificar si hay un usuario logueado y si es un jugador
+  const { data: { user } } = await supabase.auth.getUser()
+  let isPlayer = false
+
+  if (user) {
+    const { data: player } = await supabase
+      .from('players')
+      .select('id')
+      .eq('auth_user_id', user.id)
+      .single()
+
+    isPlayer = !!player
+  }
+
   const { data: categories } = await supabase
     .from('categories')
     .select('*')
@@ -32,12 +46,21 @@ export default async function CategoriasPublicPage() {
               <h1 className="text-2xl md:text-4xl font-heading font-bold">🎾 Liga de Tenis del Club Atletico del Rosario</h1>
               <p className="text-celeste-300 mt-1 text-sm md:text-base">Temporada 2026</p>
             </div>
-            <Link
-              href="/admin"
-              className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-sm"
-            >
-              Admin
-            </Link>
+            {isPlayer ? (
+              <Link
+                href="/jugador/dashboard"
+                className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-sm"
+              >
+                🎾 Mis Partidos
+              </Link>
+            ) : (
+              <Link
+                href="/jugador/login"
+                className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-sm"
+              >
+                Iniciar Sesión
+              </Link>
+            )}
           </div>
         </div>
       </div>

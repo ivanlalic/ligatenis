@@ -17,6 +17,20 @@ export default async function CategoriaPublicDetailPage({
 }) {
   const supabase = await createClient()
 
+  // Verificar si hay un usuario logueado y si es un jugador
+  const { data: { user } } = await supabase.auth.getUser()
+  let isPlayer = false
+
+  if (user) {
+    const { data: player } = await supabase
+      .from('players')
+      .select('id')
+      .eq('auth_user_id', user.id)
+      .single()
+
+    isPlayer = !!player
+  }
+
   const { data: category } = await supabase
     .from('categories')
     .select('*')
@@ -119,12 +133,21 @@ export default async function CategoriaPublicDetailPage({
             >
               ← Volver
             </Link>
-            <Link
-              href="/admin"
-              className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-xs md:text-sm font-medium shadow-sm"
-            >
-              Admin
-            </Link>
+            {isPlayer ? (
+              <Link
+                href="/jugador/dashboard"
+                className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-xs md:text-sm font-medium shadow-sm"
+              >
+                🎾 Mis Partidos
+              </Link>
+            ) : (
+              <Link
+                href="/jugador/login"
+                className="px-3 py-1.5 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-xs md:text-sm font-medium shadow-sm"
+              >
+                Iniciar Sesión
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-3">
             <div className="text-3xl md:text-4xl">🏆</div>
