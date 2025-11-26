@@ -92,6 +92,32 @@ export default async function PlayerDashboardPage() {
         </div>
       </div>
 
+      {/* Navegación */}
+      <div className="border-b border-gray-200 bg-white">
+        <div className="container mx-auto px-4">
+          <nav className="flex gap-6">
+            <Link
+              href="/jugador/dashboard"
+              className="px-4 py-3 border-b-2 border-primary-900 text-primary-900 font-medium"
+            >
+              🎾 Mis Partidos
+            </Link>
+            <Link
+              href={`/categorias/${player.current_category_id}`}
+              className="px-4 py-3 text-gray-600 hover:text-primary-900 transition"
+            >
+              📊 Tabla de Posiciones
+            </Link>
+            <Link
+              href="/categorias"
+              className="px-4 py-3 text-gray-600 hover:text-primary-900 transition"
+            >
+              👀 Otras Ligas
+            </Link>
+          </nav>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-8">
         {/* Info del jugador */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
