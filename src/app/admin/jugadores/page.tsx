@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import PlayerFilters from '@/components/admin/PlayerFilters'
+import NewPlayerCredentialsModal from '@/components/admin/NewPlayerCredentialsModal'
 
 export default async function JugadoresPage({
   searchParams,
@@ -161,6 +162,9 @@ export default async function JugadoresPage({
           Mostrando {players.length} jugador{players.length !== 1 ? 'es' : ''}
         </div>
       )}
+
+      {/* Modal para mostrar credenciales de nuevo jugador */}
+      <NewPlayerCredentialsModal />
     </div>
   )
 }

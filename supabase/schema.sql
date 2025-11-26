@@ -31,6 +31,9 @@ CREATE TABLE players (
   last_name TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
 
+  -- Autenticación (v2.0)
+  auth_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+
   -- Categorías
   initial_category_id UUID NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
   current_category_id UUID NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
@@ -50,6 +53,7 @@ CREATE TABLE players (
 CREATE INDEX idx_players_current_category ON players(current_category_id);
 CREATE INDEX idx_players_status ON players(status);
 CREATE INDEX idx_players_email ON players(email);
+CREATE INDEX idx_players_auth_user_id ON players(auth_user_id);
 
 -- ============================================
 -- TABLA: rounds (Fechas/Rondas)

@@ -4,13 +4,35 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+// Función auxiliar para generar password seguro
+function generateSecurePassword(): string {
+  const length = 12
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%'
+  let password = ''
+
+  // Asegurar al menos: 1 mayúscula, 1 minúscula, 1 número, 1 especial
+  password += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[Math.floor(Math.random() * 26)]
+  password += 'abcdefghijklmnopqrstuvwxyz'[Math.floor(Math.random() * 26)]
+  password += '0123456789'[Math.floor(Math.random() * 10)]
+  password += '!@#$%'[Math.floor(Math.random() * 5)]
+
+  // Completar el resto
+  for (let i = password.length; i < length; i++) {
+    password += charset[Math.floor(Math.random() * charset.length)]
+  }
+
+  // Mezclar caracteres
+  return password.split('').sort(() => Math.random() - 0.5).join('')
+}
+
 export async function createPlayer(formData: FormData) {
   const supabase = await createClient()
 
   const categoryId = formData.get('category_id') as string
   const redirectTo = formData.get('redirect_to') as string | null
+  const createAuthUser = formData.get('create_auth_user') === 'true'
 
-  const data = {
+  const playerData = {
     first_name: formData.get('first_name') as string,
     last_name: formData.get('last_name') as string,
     email: formData.get('email') as string,
@@ -21,20 +43,73 @@ export async function createPlayer(formData: FormData) {
     status: 'active' as const,
   }
 
-  const { error } = await supabase
-    .from('players')
-    .insert([data])
+  let generatedPassword: string | null = null
+  let authUserId: string | null = null
 
-  if (error) {
-    console.error('Error creating player:', error.message)
-    throw new Error(error.message)
+  // Si se solicita crear usuario de autenticación
+  if (createAuthUser) {
+    generatedPassword = generateSecurePassword()
+
+    // Crear usuario en Supabase Auth usando service_role
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email: playerData.email,
+      password: generatedPassword,
+      email_confirm: true, // Auto-confirmar email
+      user_metadata: {
+        first_name: playerData.first_name,
+        last_name: playerData.last_name,
+      }
+    })
+
+    if (authError) {
+      console.error('Error creating auth user:', authError.message)
+      throw new Error(`Error al crear usuario: ${authError.message}`)
+    }
+
+    authUserId = authData.user.id
+  }
+
+  // Crear jugador en la tabla players
+  const { data: player, error: playerError } = await supabase
+    .from('players')
+    .insert([{
+      ...playerData,
+      auth_user_id: authUserId,
+    }])
+    .select()
+    .single()
+
+  if (playerError) {
+    // Si falla la creación del player pero se creó el auth user, eliminarlo
+    if (authUserId) {
+      await supabase.auth.admin.deleteUser(authUserId)
+    }
+    console.error('Error creating player:', playerError.message)
+    throw new Error(playerError.message)
   }
 
   revalidatePath('/admin')
   revalidatePath('/admin/jugadores')
   revalidatePath(`/admin/categorias/${categoryId}`)
 
-  // Redirigir a la categoría si viene de allí, sino a jugadores
+  // Si se generó password, retornar las credenciales (se mostrará en un modal)
+  if (generatedPassword) {
+    // Guardar temporalmente en sessionStorage del servidor para mostrar después
+    // Por ahora, redirigir con query params (temporal - mejorar en producción)
+    const params = new URLSearchParams({
+      email: playerData.email,
+      password: generatedPassword,
+      name: `${playerData.first_name} ${playerData.last_name}`
+    })
+
+    if (redirectTo && redirectTo.startsWith('/admin/categorias/')) {
+      redirect(`${redirectTo}?newPlayer=true&${params.toString()}`)
+    } else {
+      redirect(`/admin/jugadores?newPlayer=true&${params.toString()}`)
+    }
+  }
+
+  // Redirigir normal si no se creó usuario
   if (redirectTo && redirectTo.startsWith('/admin/categorias/')) {
     redirect(redirectTo)
   } else {
