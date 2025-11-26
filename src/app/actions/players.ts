@@ -130,7 +130,12 @@ export async function createPlayer(formData: FormData) {
       redirect('/admin/jugadores')
     }
   } catch (error: any) {
-    // Capturar cualquier error no manejado
+    // No capturar errores de redirect de Next.js (son normales)
+    if (error?.digest?.startsWith('NEXT_REDIRECT')) {
+      throw error
+    }
+
+    // Capturar cualquier otro error no manejado
     console.error('Unexpected error in createPlayer:', error)
     redirect(`/admin/jugadores/nuevo?error=${encodeURIComponent(error.message || 'Error inesperado al crear jugador')}`)
   }
