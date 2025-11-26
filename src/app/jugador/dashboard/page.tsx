@@ -200,14 +200,14 @@ export default async function PlayerDashboardPage() {
                       const isCurrentPlayer = s.player_id === player.id
                       return (
                         <tr key={s.id} className={isCurrentPlayer ? 'bg-celeste-50 font-bold' : 'hover:bg-gray-50'}>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm font-mono">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm font-mono text-gray-900">
                             {s.position}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                             {s.player.first_name} {s.player.last_name}
                             {isCurrentPlayer && <span className="ml-2 text-celeste-600">(Tú)</span>}
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm text-center">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-gray-900">
                             {s.matches_played}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-bold text-primary-900">
