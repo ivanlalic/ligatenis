@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 // Función auxiliar para generar password seguro
 function generateSecurePassword(): string {
@@ -50,8 +51,9 @@ export async function createPlayer(formData: FormData) {
   if (createAuthUser) {
     generatedPassword = generateSecurePassword()
 
-    // Crear usuario en Supabase Auth usando service_role
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    // Usar cliente admin para crear usuario en Supabase Auth
+    const adminClient = createAdminClient()
+    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
       email: playerData.email,
       password: generatedPassword,
       email_confirm: true, // Auto-confirmar email
@@ -80,9 +82,10 @@ export async function createPlayer(formData: FormData) {
     .single()
 
   if (playerError) {
-    // Si falla la creación del player pero se creó el auth user, eliminarlo
+    // Si falla la creación del player pero se creó el auth user, eliminarlo (rollback)
     if (authUserId) {
-      await supabase.auth.admin.deleteUser(authUserId)
+      const adminClient = createAdminClient()
+      await adminClient.auth.admin.deleteUser(authUserId)
     }
     console.error('Error creating player:', playerError.message)
     throw new Error(playerError.message)
