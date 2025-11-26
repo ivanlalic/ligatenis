@@ -56,9 +56,7 @@ export async function loadMatchResult(
     throw new Error('Error al cargar el resultado')
   }
 
-  // Recalcular tabla de posiciones
-  await recalculateStandings(match.rounds.category_id)
-
+  // Nota: La tabla de posiciones se actualiza solo cuando se cierra la fecha
   revalidatePath('/admin/categorias')
 }
 
@@ -376,9 +374,7 @@ export async function submitPlayerMatchResult(formData: FormData) {
     throw new Error('Error al cargar el resultado')
   }
 
-  // Recalcular tabla de posiciones
-  await recalculateStandings(match.category_id)
-
+  // Nota: La tabla de posiciones se actualiza solo cuando se cierra la fecha
   revalidatePath('/jugador/dashboard')
   revalidatePath('/categorias')
 }
@@ -388,6 +384,17 @@ export async function submitPlayerMatchResult(formData: FormData) {
  */
 export async function closeRound(roundId: string) {
   const supabase = await createClient()
+
+  // Obtener la ronda para saber la categoría
+  const { data: round } = await supabase
+    .from('rounds')
+    .select('category_id')
+    .eq('id', roundId)
+    .single()
+
+  if (!round) {
+    throw new Error('Ronda no encontrada')
+  }
 
   // Verificar que todos los partidos tengan resultado o estén marcados como no reportados
   const { data: pendingMatches } = await supabase
@@ -414,5 +421,10 @@ export async function closeRound(roundId: string) {
     throw new Error('Error al cerrar la jornada')
   }
 
+  // Recalcular tabla de posiciones al cerrar la fecha
+  await recalculateStandings(round.category_id)
+
   revalidatePath('/admin/categorias')
+  revalidatePath(`/admin/categorias/${round.category_id}`)
+  revalidatePath('/categorias')
 }

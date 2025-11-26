@@ -434,7 +434,7 @@ export default async function CategoriaPublicDetailPage({
                 <div className="text-center py-6">
                   <div className="text-4xl mb-2">📈</div>
                   <p className="text-sm text-gray-600">
-                    La tabla se actualizará cuando se carguen resultados
+                    La tabla se actualizará al cerrar la primera fecha
                   </p>
                 </div>
               )}
