@@ -30,7 +30,7 @@ export async function createPlayer(formData: FormData) {
   try {
     const supabase = await createClient()
 
-    const categoryId = formData.get('category_id') as string
+    const categoryId = formData.get('category_id') as string | null
     const redirectTo = formData.get('redirect_to') as string | null
     const createAuthUser = formData.get('create_auth_user') === 'true'
 
@@ -40,8 +40,8 @@ export async function createPlayer(formData: FormData) {
       email: formData.get('email') as string,
       phone: formData.get('phone') as string || null,
       notes: formData.get('notes') as string || null,
-      initial_category_id: categoryId,
-      current_category_id: categoryId,
+      initial_category_id: categoryId || null,
+      current_category_id: categoryId || null,
       status: 'active' as const,
     }
 
@@ -97,33 +97,11 @@ export async function createPlayer(formData: FormData) {
     redirect(`/admin/jugadores/nuevo?error=${encodeURIComponent(`Error al crear jugador: ${playerError.message}`)}`)
   }
 
-  // Crear registro inicial en standings para este jugador
-  const { error: standingsError } = await supabase
-    .from('standings')
-    .insert({
-      category_id: categoryId,
-      player_id: player.id,
-      position: 0, // Se calculará después
-      points: 0,
-      matches_played: 0,
-      matches_won: 0,
-      matches_lost: 0,
-      matches_won_by_wo: 0,
-      matches_lost_by_wo: 0,
-      sets_won: 0,
-      sets_lost: 0,
-      games_won: 0,
-      games_lost: 0
-    })
-
-  if (standingsError) {
-    console.error('Error creating standings:', standingsError.message)
-    // No fallar, solo log - el jugador ya fue creado
-  }
-
   revalidatePath('/admin')
   revalidatePath('/admin/jugadores')
-  revalidatePath(`/admin/categorias/${categoryId}`)
+  if (categoryId) {
+    revalidatePath(`/admin/categorias/${categoryId}`)
+  }
 
   // Si se generó password, retornar las credenciales (se mostrará en un modal)
   if (generatedPassword) {

@@ -34,9 +34,9 @@ CREATE TABLE players (
   -- Autenticación (v2.0)
   auth_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
-  -- Categorías
-  initial_category_id UUID NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
-  current_category_id UUID NOT NULL REFERENCES categories(id) ON DELETE RESTRICT,
+  -- Categorías (opcionales hasta que se asigna el jugador a una liga)
+  initial_category_id UUID REFERENCES categories(id) ON DELETE RESTRICT,
+  current_category_id UUID REFERENCES categories(id) ON DELETE RESTRICT,
 
   -- Estado
   status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive')),
