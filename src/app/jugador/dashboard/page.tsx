@@ -43,6 +43,16 @@ export default async function PlayerDashboardPage() {
     .eq('category_id', player.current_category_id)
     .single()
 
+  // Obtener tabla completa de posiciones
+  const { data: allStandings } = await supabase
+    .from('standings')
+    .select(`
+      *,
+      player:players(id, first_name, last_name)
+    `)
+    .eq('category_id', player.current_category_id)
+    .order('position', { ascending: true })
+
   // Obtener rondas pasadas y actuales (no futuras)
   const { data: rounds } = await supabase
     .from('rounds')
@@ -77,44 +87,26 @@ export default async function PlayerDashboardPage() {
                 🎾 Mi Dashboard
               </h1>
               <p className="text-celeste-100 text-sm mt-1">
-                {player.first_name} {player.last_name}
+                {player.first_name} {player.last_name} · {player.current_category?.name}
               </p>
             </div>
-            <form action={signOutPlayer}>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition font-medium text-sm"
+            <div className="flex items-center gap-3">
+              <Link
+                href="/categorias"
+                className="px-4 py-2 bg-celeste-500 text-white rounded-lg hover:bg-celeste-600 transition font-medium text-sm"
               >
-                Cerrar Sesión
-              </button>
-            </form>
+                👀 Otras Ligas
+              </Link>
+              <form action={signOutPlayer}>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition font-medium text-sm"
+                >
+                  Cerrar Sesión
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
-      </div>
-
-      {/* Navegación */}
-      <div className="border-b border-gray-200 bg-white">
-        <div className="container mx-auto px-4">
-          <nav className="flex gap-6">
-            <Link
-              href="/jugador/dashboard"
-              className="px-4 py-3 border-b-2 border-primary-900 text-primary-900 font-medium"
-            >
-              🎾 Mis Partidos
-            </Link>
-            <Link
-              href={`/categorias/${player.current_category_id}`}
-              className="px-4 py-3 text-gray-600 hover:text-primary-900 transition"
-            >
-              📊 Tabla de Posiciones
-            </Link>
-            <Link
-              href="/categorias"
-              className="px-4 py-3 text-gray-600 hover:text-primary-900 transition"
-            >
-              👀 Otras Ligas
-            </Link>
-          </nav>
         </div>
       </div>
 
@@ -161,6 +153,92 @@ export default async function PlayerDashboardPage() {
             <p className="text-sm text-gray-600 mt-1">
               {standings?.matches_played || 0} jugados
             </p>
+          </div>
+        </div>
+
+        {/* Tabla de Posiciones */}
+        <div className="bg-white rounded-lg shadow-sm border border-primary-900 mb-8">
+          <div className="border-b border-gray-200 bg-primary-900 text-white px-6 py-4 rounded-t-lg">
+            <h2 className="text-xl font-heading font-bold">📊 Tabla de Posiciones</h2>
+            <p className="text-sm text-celeste-100 mt-1">
+              {player.current_category?.name}
+            </p>
+          </div>
+
+          <div className="p-6">
+            {allStandings && allStandings.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="min-w-full">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        Pos
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        Jugador
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        PJ
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        Pts
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        PG
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        PP
+                      </th>
+                      <th className="px-4 py-3 text-center text-xs font-medium text-gray-700 uppercase tracking-wider">
+                        Dif.Sets
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {allStandings.map((s: any) => {
+                      const setsDiff = s.sets_won - s.sets_lost
+                      const isCurrentPlayer = s.player_id === player.id
+                      return (
+                        <tr key={s.id} className={isCurrentPlayer ? 'bg-celeste-50 font-bold' : 'hover:bg-gray-50'}>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm font-mono">
+                            {s.position}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm">
+                            {s.player.first_name} {s.player.last_name}
+                            {isCurrentPlayer && <span className="ml-2 text-celeste-600">(Tú)</span>}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-center">
+                            {s.matches_played}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-center font-bold text-primary-900">
+                            {s.points}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-green-600">
+                            {s.matches_won}
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap text-sm text-center text-red-600">
+                            {s.matches_lost}
+                          </td>
+                          <td className={`px-4 py-3 whitespace-nowrap text-sm text-center font-mono ${
+                            setsDiff > 0
+                              ? 'text-green-600'
+                              : setsDiff < 0
+                              ? 'text-red-600'
+                              : 'text-gray-500'
+                          }`}>
+                            {setsDiff > 0 ? '+' : ''}{setsDiff}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-600">La tabla se actualizará al cerrar la primera fecha</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -273,16 +351,6 @@ export default async function PlayerDashboardPage() {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Link a tabla pública */}
-        <div className="mt-6 text-center">
-          <Link
-            href={`/categorias/${player.current_category_id}`}
-            className="text-primary-900 hover:text-primary-950 font-medium text-sm"
-          >
-            Ver tabla de posiciones completa →
-          </Link>
         </div>
       </div>
     </div>
