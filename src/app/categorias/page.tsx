@@ -39,11 +39,11 @@ export default async function CategoriasPublicPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary-900 text-white py-6 md:py-8 shadow-md">
+      <div className="bg-primary-900 text-white py-4 md:py-6 shadow-md">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl md:text-4xl font-heading font-bold">🎾 Liga de Tenis del Club Atletico del Rosario</h1>
+              <h1 className="text-2xl md:text-4xl font-heading font-bold">Liga de Tenis • CAR</h1>
               <p className="text-celeste-300 mt-1 text-sm md:text-base">Temporada 2026</p>
             </div>
             {isPlayer ? (
@@ -51,7 +51,7 @@ export default async function CategoriasPublicPage() {
                 href="/jugador/dashboard"
                 className="px-3 py-2 md:px-4 md:py-2 bg-white text-primary-900 rounded-lg hover:bg-gray-100 transition text-sm md:text-base font-medium shadow-sm"
               >
-                🎾 Mis Partidos
+                Mis Partidos
               </Link>
             ) : (
               <Link
@@ -66,17 +66,16 @@ export default async function CategoriasPublicPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         {categoriesWithCounts.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {categoriesWithCounts.map((cat) => (
               <Link
                 key={cat.id}
                 href={`/categorias/${cat.id}`}
-                className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-900 transition-all duration-200 block group"
+                className="bg-white p-4 md:p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-900 transition-all duration-200 block group"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <div className="text-4xl">🏆</div>
                   <span className="text-sm font-medium text-gray-500">
                     Temporada {cat.season_year}
                   </span>
@@ -85,7 +84,7 @@ export default async function CategoriasPublicPage() {
                   {cat.name}
                 </h3>
                 <div className="flex gap-4 text-sm text-gray-600">
-                  <span>👥 {cat.playerCount} jugadores</span>
+                  <span>{cat.playerCount} jugadores</span>
                 </div>
                 <div className="mt-4 text-primary-900 text-sm font-medium group-hover:underline">
                   Ver fixture y tabla →

@@ -80,11 +80,11 @@ export default async function PlayerDashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-celeste-50 via-white to-primary-50">
       {/* Header */}
       <div className="bg-primary-900 text-white shadow-sm">
-        <div className="container mx-auto px-4 py-6">
+        <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-heading font-bold">
-                🎾 Mi Dashboard
+                Mi Dashboard
               </h1>
               <p className="text-celeste-100 text-sm mt-1">
                 {player.first_name} {player.last_name} · {player.current_category?.name}
@@ -95,7 +95,7 @@ export default async function PlayerDashboardPage() {
                 href="/categorias"
                 className="px-4 py-2 bg-celeste-500 text-white rounded-lg hover:bg-celeste-600 transition font-medium text-sm"
               >
-                👀 Otras Ligas
+                Ver Ligas
               </Link>
               <form action={signOutPlayer}>
                 <button
@@ -110,15 +110,12 @@ export default async function PlayerDashboardPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         {/* Info del jugador */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-6 mb-6">
           {/* Categoría */}
-          <div className="bg-white rounded-lg shadow-sm border border-primary-900 p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl">📊</span>
-              <h2 className="font-heading font-bold text-gray-900">Categoría</h2>
-            </div>
+          <div className="bg-white rounded-lg shadow-sm border-t-2 border-primary-900 p-4 md:p-6">
+            <h2 className="font-heading font-bold text-gray-900 mb-3">Categoría</h2>
             <p className="text-2xl font-bold text-primary-900">
               {player.current_category?.name}
             </p>
@@ -128,11 +125,8 @@ export default async function PlayerDashboardPage() {
           </div>
 
           {/* Posición */}
-          <div className="bg-white rounded-lg shadow-sm border border-primary-900 p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl">🏆</span>
-              <h2 className="font-heading font-bold text-gray-900">Posición</h2>
-            </div>
+          <div className="bg-white rounded-lg shadow-sm border-t-2 border-celeste-400 p-4 md:p-6">
+            <h2 className="font-heading font-bold text-gray-900 mb-3">Posición</h2>
             <p className="text-2xl font-bold text-celeste-500">
               {standings?.position ? `#${standings.position}` : 'N/A'}
             </p>
@@ -142,11 +136,8 @@ export default async function PlayerDashboardPage() {
           </div>
 
           {/* Partidos */}
-          <div className="bg-white rounded-lg shadow-sm border border-primary-900 p-6">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl">🎯</span>
-              <h2 className="font-heading font-bold text-gray-900">Partidos</h2>
-            </div>
+          <div className="bg-white rounded-lg shadow-sm border-t-2 border-primary-900 p-4 md:p-6">
+            <h2 className="font-heading font-bold text-gray-900 mb-3">Partidos</h2>
             <p className="text-2xl font-bold text-primary-900">
               {standings?.matches_won || 0}G - {standings?.matches_lost || 0}P
             </p>
@@ -157,9 +148,9 @@ export default async function PlayerDashboardPage() {
         </div>
 
         {/* Tabla de Posiciones */}
-        <div className="bg-white rounded-lg shadow-sm border border-primary-900 mb-8">
+        <div className="bg-white rounded-lg shadow-sm border border-primary-900 mb-6">
           <div className="border-b border-gray-200 bg-primary-900 text-white px-6 py-4 rounded-t-lg">
-            <h2 className="text-xl font-heading font-bold">📊 Tabla de Posiciones</h2>
+            <h2 className="text-xl font-heading font-bold">Tabla de Posiciones</h2>
             <p className="text-sm text-celeste-100 mt-1">
               {player.current_category?.name}
             </p>
