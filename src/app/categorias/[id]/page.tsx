@@ -150,7 +150,7 @@ export default async function CategoriaPublicDetailPage({
             )}
           </div>
           <div>
-            <h1 className="text-2xl md:text-4xl font-heading font-bold">{category.name}</h1>
+            <h1 className="text-2xl md:text-3xl font-heading font-bold">{category.name}</h1>
             <p className="text-celeste-300 mt-1 text-sm md:text-base">Temporada {category.season_year}</p>
           </div>
         </div>
@@ -163,7 +163,9 @@ export default async function CategoriaPublicDetailPage({
           <div className="lg:col-span-2 space-y-4">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-heading font-bold text-primary-900">Fixture</h2>
+                <h2 className="text-xl md:text-2xl font-heading font-bold text-primary-900">
+                  Fixture
+                </h2>
                 <RoundSelector
                   rounds={visibleRounds || []}
                   selectedRoundNumber={selectedRoundNumber}
@@ -191,14 +193,14 @@ export default async function CategoriaPublicDetailPage({
                   </div>
 
                   {/* Matches */}
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {selectedRound.matches && selectedRound.matches.length > 0 ? (
                       selectedRound.matches.map((match: any) => (
                         <div
                           key={match.id}
-                          className="border border-gray-200 rounded-lg p-4 hover:border-primary-300 transition"
+                          className="border border-gray-200 rounded-lg p-3 md:p-4 hover:border-primary-300 transition-all duration-200"
                         >
-                          <div className="space-y-3">
+                          <div className="space-y-2">
                             {/* Sin resultado - formato compacto */}
                             {!match.winner_id && !match.is_not_reported && (
                               <div className="text-center text-sm font-medium text-gray-900">
@@ -350,7 +352,7 @@ export default async function CategoriaPublicDetailPage({
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6 lg:sticky lg:top-8">
               <div className="mb-4">
-                <h2 className="text-xl font-heading font-bold text-primary-900">Tabla de Posiciones</h2>
+                <h2 className="text-lg md:text-xl font-heading font-bold text-primary-900">Tabla de Posiciones</h2>
                 {lastClosedRoundNumber && (
                   <p className="text-xs text-celeste-500 mt-1">
                     Actualizada a Fecha {lastClosedRoundNumber}

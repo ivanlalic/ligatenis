@@ -149,8 +149,8 @@ export default async function PlayerDashboardPage() {
 
         {/* Tabla de Posiciones */}
         <div className="bg-white rounded-lg shadow-sm border border-primary-900 mb-6">
-          <div className="border-b border-gray-200 bg-primary-900 text-white px-6 py-4 rounded-t-lg">
-            <h2 className="text-xl font-heading font-bold">Tabla de Posiciones</h2>
+          <div className="border-b border-gray-200 bg-primary-900 text-white px-4 md:px-6 py-3 md:py-4 rounded-t-lg">
+            <h2 className="text-lg md:text-xl font-heading font-bold">Tabla de Posiciones</h2>
             <p className="text-sm text-celeste-100 mt-1">
               {player.current_category?.name}
             </p>
@@ -235,14 +235,14 @@ export default async function PlayerDashboardPage() {
 
         {/* Mis Partidos */}
         <div className="bg-white rounded-lg shadow-sm border border-primary-900">
-          <div className="border-b border-gray-200 bg-primary-900 text-white px-6 py-4 rounded-t-lg">
-            <h2 className="text-xl font-heading font-bold">Mis Partidos</h2>
+          <div className="border-b border-gray-200 bg-primary-900 text-white px-4 md:px-6 py-3 md:py-4 rounded-t-lg">
+            <h2 className="text-lg md:text-xl font-heading font-bold">Mis Partidos</h2>
             <p className="text-sm text-celeste-100 mt-1">
               Partidos de rondas pasadas y actuales
             </p>
           </div>
 
-          <div className="p-6">
+          <div className="p-4 md:p-6">
             {matches && matches.length > 0 ? (
               <div className="space-y-4">
                 {matches.map((match) => {

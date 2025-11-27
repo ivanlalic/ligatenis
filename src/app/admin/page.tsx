@@ -25,9 +25,9 @@ export default async function AdminDashboard() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-3xl font-heading font-bold text-primary-900">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Resumen general de la liga 2026</p>
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-heading font-bold text-primary-900">Dashboard</h1>
+        <p className="text-gray-600 mt-1 text-sm md:text-base">Resumen general de la liga 2026</p>
       </div>
 
       {/* Estadísticas generales */}
@@ -56,7 +56,7 @@ export default async function AdminDashboard() {
       {/* Categorías */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6">
         <div className="flex items-center justify-between mb-4 md:mb-6">
-          <h2 className="text-xl font-heading font-bold text-primary-900">Categorías</h2>
+          <h2 className="text-lg md:text-xl font-heading font-bold text-primary-900">Categorías</h2>
           <Link
             href="/admin/categorias/nueva"
             className="px-4 py-2 bg-primary-900 text-white rounded-lg hover:bg-primary-950 transition shadow-sm"
