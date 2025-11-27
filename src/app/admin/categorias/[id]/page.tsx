@@ -357,7 +357,7 @@ export default async function CategoriaDetailPage({
               <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
                 <h3 className="text-sm font-medium text-gray-900">
                   Posiciones actuales
-                  {rounds?.filter((r: any) => r.closed_by_admin_at).length > 0 && (
+                  {(rounds?.filter((r: any) => r.closed_by_admin_at)?.length || 0) > 0 && (
                     <span className="ml-2 text-celeste-600">
                       • Actualizada a Fecha {
                         rounds
