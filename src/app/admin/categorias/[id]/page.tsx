@@ -516,19 +516,36 @@ export default async function CategoriaDetailPage({
                 </div>
                 <div className="p-4 sm:p-6">
                   {round.matches && round.matches.length > 0 ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="space-y-3">
                       {round.matches.map((match: any) => {
+                        const isPending = !match.winner_id && !match.is_not_reported
+                        const isCompleted = match.winner_id !== null
+                        const isNotReported = match.is_not_reported
+
                         return (
                           <div
                             key={match.id}
-                            className={`border rounded-lg p-4 ${
-                              match.winner_id
-                                ? 'border-green-200 bg-green-50'
-                                : match.is_not_reported
-                                ? 'border-yellow-200 bg-yellow-50'
-                                : 'border-gray-200'
+                            className={`border-2 rounded-lg p-4 transition-all ${
+                              isCompleted
+                                ? 'border-green-500 bg-green-50'
+                                : isNotReported
+                                ? 'border-red-400 bg-red-50'
+                                : 'border-blue-400 bg-blue-50'
                             }`}
                           >
+                            {/* Badge de estado */}
+                            <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+                              <span className={`text-xs font-bold uppercase px-2 py-1 rounded ${
+                                isCompleted
+                                  ? 'bg-green-600 text-white'
+                                  : isNotReported
+                                  ? 'bg-red-600 text-white'
+                                  : 'bg-blue-600 text-white'
+                              }`}>
+                                {isCompleted ? '✓ Jugado' : isNotReported ? '✗ No Reportado' : '⏳ Pendiente'}
+                              </span>
+                            </div>
+
                             <div className="space-y-3">
                               {/* Sin resultado - formato compacto */}
                               {!match.winner_id && !match.is_not_reported && (

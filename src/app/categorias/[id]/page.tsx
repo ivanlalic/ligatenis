@@ -361,7 +361,7 @@ export default async function CategoriaPublicDetailPage({
               </div>
 
               {standings && standings.length > 0 ? (
-                <div className="overflow-x-auto -mx-6">
+                <div className="overflow-x-auto -mx-4 md:mx-0">
                   <table className="min-w-full">
                     <thead className="bg-primary-900 text-white">
                       <tr>
