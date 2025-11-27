@@ -76,6 +76,12 @@ export default async function PlayerDashboardPage() {
     .in('round.status', ['active', 'completed'])
     .order('created_at', { ascending: false })
 
+  // Calcular la última fecha cerrada para mostrar en la tabla
+  const lastClosedRound = rounds
+    ?.filter((r: any) => r.closed_by_admin_at)
+    .sort((a: any, b: any) => b.round_number - a.round_number)[0]
+  const lastClosedRoundNumber = lastClosedRound?.round_number || null
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-celeste-50 via-white to-primary-50">
       {/* Header */}
@@ -153,6 +159,9 @@ export default async function PlayerDashboardPage() {
             <h2 className="text-lg md:text-xl font-heading font-bold">Tabla de Posiciones</h2>
             <p className="text-sm text-celeste-100 mt-1">
               {player.current_category?.name}
+              {lastClosedRoundNumber && (
+                <span className="ml-2">• Actualizada a Fecha {lastClosedRoundNumber}</span>
+              )}
             </p>
           </div>
 

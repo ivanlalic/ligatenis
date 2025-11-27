@@ -352,9 +352,26 @@ export default async function CategoriaDetailPage({
           )}
 
           {standings && standings.length > 0 ? (
-            <div className="bg-white rounded-lg shadow-sm overflow-x-auto border border-gray-200">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-primary-900 text-white">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+              {/* Header de la tabla */}
+              <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-sm font-medium text-gray-900">
+                  Posiciones actuales
+                  {rounds?.filter((r: any) => r.closed_by_admin_at).length > 0 && (
+                    <span className="ml-2 text-celeste-600">
+                      • Actualizada a Fecha {
+                        rounds
+                          ?.filter((r: any) => r.closed_by_admin_at)
+                          .sort((a: any, b: any) => b.round_number - a.round_number)[0]
+                          ?.round_number
+                      }
+                    </span>
+                  )}
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-primary-900 text-white">
                   <tr>
                     <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium uppercase">
                       Pos
@@ -421,6 +438,7 @@ export default async function CategoriaDetailPage({
                   })}
                 </tbody>
               </table>
+              </div>
             </div>
           ) : (
             <div className="bg-white p-12 rounded-lg shadow-sm border border-gray-200 text-center">
