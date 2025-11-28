@@ -89,12 +89,12 @@ export async function markMatchAsNotReported(matchId: string) {
 async function recalculateStandings(categoryId: string) {
   const supabase = await createClient()
 
-  // Obtener todos los partidos completados de la categoría
+  // Obtener todos los partidos completados o no reportados de la categoría
   const { data: matches } = await supabase
     .from('matches')
     .select('*')
     .eq('category_id', categoryId)
-    .not('winner_id', 'is', null)
+    .or('winner_id.not.is.null,is_not_reported.eq.true')
 
   if (!matches || matches.length === 0) {
     return
@@ -131,16 +131,25 @@ async function recalculateStandings(categoryId: string) {
   matches.forEach(match => {
     const player1Id = match.player1_id
     const player2Id = match.player2_id
-    const winnerId = match.winner_id
-    const loserId = winnerId === player1Id ? player2Id : player1Id
 
     if (!stats[player1Id] || !stats[player2Id]) {
       return
     }
 
-    // Incrementar partidos jugados
+    // Incrementar partidos jugados para ambos
     stats[player1Id].matches_played++
     stats[player2Id].matches_played++
+
+    // Si el partido no fue reportado: solo cuenta como jugado, sin puntos ni estadísticas
+    if (match.is_not_reported) {
+      // Penalización: ambos jugadores pierden (0 puntos)
+      // Ya se incrementó matches_played para ambos
+      return
+    }
+
+    // A partir de aquí, el partido tiene ganador
+    const winnerId = match.winner_id
+    const loserId = winnerId === player1Id ? player2Id : player1Id
 
     // Determinar ganador/perdedor
     stats[winnerId].matches_won++
