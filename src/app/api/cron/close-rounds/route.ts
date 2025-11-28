@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       const { error: closeError } = await supabase
         .from('rounds')
         .update({
-          status: 'expired',
+          status: 'completed',
           closed_by_admin_at: new Date().toISOString()
         })
         .eq('id', round.id)
